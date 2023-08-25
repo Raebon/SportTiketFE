@@ -1,15 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import { RoutesComponent } from './routes/routes.tsx';
-import { MenuComponent } from './layout/MenuComponent.tsx';
 import { BrowserRouter } from 'react-router-dom';
+import App from './app.tsx';
+import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
-    <MenuComponent />
-    <RoutesComponent />
+      <App />
     </BrowserRouter>
   </React.StrictMode>
 );

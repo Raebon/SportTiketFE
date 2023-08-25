@@ -1,17 +1,15 @@
 import { FC } from 'react';
 import { Button } from '../../shared/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-
-export interface IMenuItems {
-  label: string;
-  path: string;
-}
+import { service } from '../../shared/service/service';
+import { IMenuItems } from '../../shared/interfaces';
 
 interface Props {
   menuItems: Array<IMenuItems>;
+  privateMenuItems: Array<IMenuItems>;
 }
 
-const MenuItems: FC<Props> = ({ menuItems }) => {
+const MenuItems: FC<Props> = ({ menuItems, privateMenuItems }) => {
   const navigate = useNavigate();
   const navigateToPath = (path: string) => {
     navigate(path);
@@ -21,7 +19,7 @@ const MenuItems: FC<Props> = ({ menuItems }) => {
       <div className="flex flex-shrink-0 items-center">
         <img
           className="h-8 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
           alt="Your Company"
         />
       </div>
@@ -29,11 +27,29 @@ const MenuItems: FC<Props> = ({ menuItems }) => {
         <div className="flex space-x-4">
           {menuItems.map((item, index) => {
             return (
-              <Button key={index} variant="menuLink" onClick={() => navigateToPath(item.path)}>
+              <Button
+                key={index}
+                variant="menuLink"
+                onClick={() => navigateToPath(item.path)}
+                disabled={item.disabled}
+              >
                 {item.label}
               </Button>
             );
           })}
+          {service.auth.isLogged() &&
+            privateMenuItems.map((item, index) => {
+              return (
+                <Button
+                  key={index}
+                  variant="menuLink"
+                  onClick={() => navigateToPath(item.path)}
+                  disabled={item.disabled}
+                >
+                  {item.label}
+                </Button>
+              );
+            })}
         </div>
       </div>
     </div>
