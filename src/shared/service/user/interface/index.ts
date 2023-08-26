@@ -12,3 +12,8 @@ export interface IWallet {
   balance: number;
   currentBet: number;
 }
+
+export interface IDepositRequest {
+  id: string;
+  amount: number;
+}
