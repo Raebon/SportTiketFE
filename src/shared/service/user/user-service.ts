@@ -21,7 +21,7 @@ export class UserService {
     }
   }
 
-  public async walletDeposit(body: IDepositRequest) {
+  public async walletDepositOrCashout(body: IDepositRequest) {
     try {
       const response: AxiosResponse<IWallet> = await api.post(`/user/wallet-deposit`, body);
       return response.data;
