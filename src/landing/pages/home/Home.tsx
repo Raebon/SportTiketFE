@@ -26,11 +26,15 @@ const Home = () => {
       <h1 className="scroll-m-20 text-5xl font-semibold tracking-tight text-center">TipTik</h1>
       <div className="grid grid-cols md:grid-cols-2 mt-10">
         <div className="grid justify-center gap-5">
-          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight mt-2 text-center">👑 Top winner tiket 👑</h3>
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight mt-2 text-center">
+            👑 Top winner tiket 👑
+          </h3>
           <TiketCardComponent item={victory} />
         </div>
         <div className="grid justify-center gap-5">
-          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight mt-2 text-center">👑 Top looser tiket 👑</h3>
+          <h3 className="scroll-m-20 text-xl font-semibold tracking-tight mt-2 text-center">
+            👑 Top looser tiket 👑
+          </h3>
           <TiketCardComponent item={defeat} />
         </div>
       </div>

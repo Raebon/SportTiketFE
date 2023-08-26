@@ -1,4 +1,7 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCurrentUserQuery } from '../../../admin/api/queries/user/getCurrentUserQuery';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../shared/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,22 +10,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '../../../shared/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../shared/components/ui/avatar';
-import { NavigateFunction } from 'react-router-dom';
-import { service } from '../../../shared/service/service';
+import AuthContext, { AuthContextType } from '../../../shared/context/AuthContext';
+import { WalletInfo } from './WalletInfo';
+interface ProfileDropdownProps {}
 
-interface ProfileDropdownProps {
-  navigate: NavigateFunction;
-}
+export const ProfileDropdown: FC<ProfileDropdownProps> = ({}) => {
+  const navigate = useNavigate();
+  const { data } = useCurrentUserQuery();
+  const { logout } = useContext<AuthContextType | any>(AuthContext);
+  const redirectToProfile = () => navigate('/my-account/profile');
+  const redirectToSettings = () => navigate('/my-account/settings');
+  const redirectToBalanceHistory = () => navigate('/my-account/transactions-history');
 
-export const ProfileDropdown: FC<ProfileDropdownProps> = ({ navigate }) => {
-  const loggout = () => {
-    service.auth.logout();
-    return navigate('/home');
-  };
-
-  const redirectToProfile = () => navigate('/profile');
-  const redirectToSettings = () => navigate('/settings');
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="p-2 hover:scale-105">
@@ -31,16 +30,20 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({ navigate }) => {
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuContent className="min-w-[200px]">
+        <DropdownMenuLabel>{data?.data.userName}</DropdownMenuLabel>
+        <WalletInfo />
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={redirectToProfile} disabled>
           Profil
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={redirectToBalanceHistory} disabled>
+          Historie transakcí
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={redirectToSettings} disabled>
           Nastavení
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={loggout}>Odhlásit</DropdownMenuItem>
+        <DropdownMenuItem onClick={logout}>Odhlásit</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -8,3 +8,8 @@ export interface IMenuItems {
   path: string;
   disabled?: boolean;
 }
+
+export interface LoginDetail {
+  userName: string;
+  password: string;
+}

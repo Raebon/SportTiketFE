@@ -1,24 +1,16 @@
 import { LogIn } from 'lucide-react';
-import { FC } from 'react';
-import { NavigateFunction } from 'react-router-dom';
+import { FC, useContext } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '../../../shared/components/ui/popover';
-import { service } from '../../../shared/service/service';
+import AuthContext, { AuthContextType } from '../../../shared/context/AuthContext';
+import { LoginDetail } from '../../../shared/interfaces';
 import LoginForm from './LoginForm';
 
-interface LoginDetail {
-  email: string;
-  password: string;
-}
+interface LoginPoppoverProps {}
 
-interface LoginPoppoverProps {
-  navigate: NavigateFunction;
-}
-
-export const LoginPoppover: FC<LoginPoppoverProps> = ({ navigate }) => {
-  const login = (event: LoginDetail) => {
-    console.log('test', event);
-    service.auth.login();
-    return navigate('/dashboard');
+export const LoginPoppover: FC<LoginPoppoverProps> = () => {
+  const { login } = useContext<AuthContextType | any>(AuthContext);
+  const handleLogin = (event: LoginDetail) => {
+    login(event);
   };
   return (
     <Popover>
@@ -26,7 +18,7 @@ export const LoginPoppover: FC<LoginPoppoverProps> = ({ navigate }) => {
         <LogIn />
       </PopoverTrigger>
       <PopoverContent>
-        <LoginForm login={login} />
+        <LoginForm login={handleLogin} />
       </PopoverContent>
     </Popover>
   );

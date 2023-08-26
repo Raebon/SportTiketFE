@@ -3,7 +3,7 @@ import { TiketListComponent } from '../../components/tiket-list/TiketListCompone
 import TiketPageBannerComponent from '../../components/tiket-page-banner/TiketPageBannerComponent';
 
 interface TiketManagementProps {}
-export const TiketManagement: FC<TiketManagementProps> = ({}) => {
+const TiketManagement: FC<TiketManagementProps> = ({}) => {
   return (
     <>
       <TiketPageBannerComponent />
@@ -11,3 +11,4 @@ export const TiketManagement: FC<TiketManagementProps> = ({}) => {
     </>
   );
 };
+export default TiketManagement;
