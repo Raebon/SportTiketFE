@@ -35,17 +35,11 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({}) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-[200px]">
         <DropdownMenuLabel>{data?.data.userName}</DropdownMenuLabel>
-        <WalletInfo closeDropdownMenu={closeDropdownMenu}/>
+        <WalletInfo closeDropdownMenu={closeDropdownMenu} />
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={redirectToProfile}>
-          Profil
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={redirectToBalanceHistory}>
-          Historie transakcí
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={redirectToSettings}>
-          Nastavení
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={redirectToProfile}>Profil</DropdownMenuItem>
+        <DropdownMenuItem onClick={redirectToBalanceHistory}>Historie transakcí</DropdownMenuItem>
+        <DropdownMenuItem onClick={redirectToSettings}>Nastavení</DropdownMenuItem>
         <DropdownMenuItem onClick={logout}>Odhlásit</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

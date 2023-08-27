@@ -1,3 +1,5 @@
+import { WalletLogEnum } from '../../../enums';
+
 export interface IUser {
   id: string;
   firstName: string;
@@ -13,7 +15,8 @@ export interface IWallet {
   currentBet: number;
 }
 
-export interface IDepositRequest {
+export interface IBalanceUpdateRequest {
   id: string;
   amount: number;
+  type: WalletLogEnum;
 }

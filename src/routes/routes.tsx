@@ -42,7 +42,7 @@ export const RoutesComponent = () => {
               <Route path="settings" element={<Settings />} />
               <Route path="deposit" element={<Deposit />} />
               <Route path="cashout" element={<Cashout />} />
-              <Route path="transaction-history" element={<TransactionHistory />} />
+              <Route path="transactions-history" element={<TransactionHistory />} />
             </Route>
           </Route>
 

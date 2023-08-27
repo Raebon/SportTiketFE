@@ -13,8 +13,9 @@ import {
 } from '../../../shared/components/ui/form';
 import { Input } from '../../../shared/components/ui/input';
 import { toast } from '../../../shared/components/ui/use-toast';
-import { IDepositRequest } from '../../../shared/service/user/interface';
+import { IBalanceUpdateRequest } from '../../../shared/service/user/interface';
 import { useWalletDepositOrCashoutMutation } from '../../api/mutations/user/useWalletDeposit';
+import { WalletLogEnum } from '../../../shared/enums';
 
 interface CashoutFormProps {
   walletId: string;
@@ -35,9 +36,10 @@ const CashoutForm: FC<CashoutFormProps> = ({ walletId }) => {
     }
   });
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const payload: IDepositRequest = {
+    const payload: IBalanceUpdateRequest = {
       id: walletId,
-      amount: -Number(values.amount)
+      amount: -Number(values.amount),
+      type: WalletLogEnum.withdraw
     };
     cashout.mutate(payload, {
       onSuccess() {

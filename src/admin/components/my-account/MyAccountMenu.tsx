@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../../shared/compon
 import { Separator } from '../../../shared/components/ui/separator';
 
 interface MyAccountMenuProps {}
-const linkClassName = "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+const linkClassName =
+  'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50';
 export const MyAccountMenu: FC<MyAccountMenuProps> = ({}) => {
   return (
     <nav className="relative">
@@ -15,34 +16,19 @@ export const MyAccountMenu: FC<MyAccountMenuProps> = ({}) => {
             <Separator />
           </CardHeader>
           <CardContent>
-            <Link
-              className={linkClassName}
-              to={'/my-account/deposit'}
-            >
+            <Link className={linkClassName} to={'/my-account/deposit'}>
               Vložit peníze
             </Link>
-            <Link
-              className={linkClassName}
-              to={'/my-account/cashout'}
-            >
+            <Link className={linkClassName} to={'/my-account/cashout'}>
               Vybrat peníze
             </Link>
-            <Link
-              className={linkClassName}
-              to={'/my-account/profile'}
-            >
+            <Link className={linkClassName} to={'/my-account/profile'}>
               Profil
             </Link>
-            <Link
-              className={linkClassName}
-              to={'/my-account/transaction-history'}
-            >
+            <Link className={linkClassName} to={'/my-account/transactions-history'}>
               Historie transakcí
             </Link>
-            <Link
-              className={linkClassName}
-              to={'/my-account/settings'}
-            >
+            <Link className={linkClassName} to={'/my-account/settings'}>
               Nastavení
             </Link>
           </CardContent>

@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import api from '../../lib/auth-interceptors';
-import { IDepositRequest, IUser, IWallet } from './interface';
+import { IBalanceUpdateRequest, IUser, IWallet } from './interface';
 
 export class UserService {
   public async getCurrentUserDetail() {
@@ -21,7 +21,7 @@ export class UserService {
     }
   }
 
-  public async walletDepositOrCashout(body: IDepositRequest) {
+  public async walletDepositOrCashout(body: IBalanceUpdateRequest) {
     try {
       const response: AxiosResponse<IWallet> = await api.post(`/user/wallet-deposit`, body);
       return response.data;

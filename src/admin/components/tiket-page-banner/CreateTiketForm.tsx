@@ -6,6 +6,7 @@ import { Button, buttonVariants } from '../../../shared/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,13 +15,14 @@ import {
 } from '../../../shared/components/ui/form';
 import { Input } from '../../../shared/components/ui/input';
 import { SheetClose, SheetFooter } from '../../../shared/components/ui/sheet';
+import { useUserWalletQuery } from '../../api/queries/user/getUserWalletQuery';
 
 const formSchema = z.object({
   name: z.string().min(3).max(50),
-  totalRate: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+  rate: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
     message: 'Chyba! Zadali jste špatný formát'
   }),
-  deposit: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+  bet: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
     message: 'Chyba! Zadali jste špatný formát'
   }),
   approximateEndDatetime: z.date()
@@ -32,12 +34,13 @@ interface CreateTiketFormProps {
 
 export const CreateTiketForm: FC<CreateTiketFormProps> = ({ closeSheet }) => {
   const [approximateEndDateTime, setApproximateEndDateTime] = useState<Date>(new Date());
+  const { data } = useUserWalletQuery();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      totalRate: '0',
-      deposit: '0',
+      rate: '0',
+      bet: '0',
       approximateEndDatetime: approximateEndDateTime
     }
   });
@@ -65,7 +68,7 @@ export const CreateTiketForm: FC<CreateTiketFormProps> = ({ closeSheet }) => {
         />
         <FormField
           control={form.control}
-          name="totalRate"
+          name="rate"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Celkový kurz</FormLabel>
@@ -78,14 +81,22 @@ export const CreateTiketForm: FC<CreateTiketFormProps> = ({ closeSheet }) => {
         />
         <FormField
           control={form.control}
-          name="deposit"
+          name="bet"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Vklad</FormLabel>
+              <FormLabel>Vsadit částku</FormLabel>
               <FormControl>
                 <Input type="number" placeholder="začněte psát..." {...field} />
               </FormControl>
               <FormMessage />
+              <FormDescription>
+                <small>
+                  zůstatek na účtu:{' '}
+                  <span className="font-medium">
+                    {(data?.data.balance! - Number(field.value)).toFixed(2)}Kč
+                  </span>
+                </small>
+              </FormDescription>
             </FormItem>
           )}
         />
@@ -96,11 +107,19 @@ export const CreateTiketForm: FC<CreateTiketFormProps> = ({ closeSheet }) => {
           </FormControl>
           <FormMessage />
         </FormItem>
-        <SheetFooter className="space-x-2 pt-2">
-          <SheetClose className={buttonVariants({ variant: 'outline' })}>Zrušit</SheetClose>
-          <Button variant="default" type="submit">
-            Vytvořit
-          </Button>
+        <div className="grid py-2 text-sm text-end text-gray-500">
+          <span>Možná výhra:</span>
+          <span className="font-medium text-lg">
+            {(Number(form.watch('bet')) * Number(form.watch('rate'))).toFixed(2)}Kč
+          </span>
+        </div>
+        <SheetFooter>
+          <div className="space-x-2">
+            <SheetClose className={buttonVariants({ variant: 'outline' })}>Zrušit</SheetClose>
+            <Button variant="default" type="submit">
+              Vytvořit
+            </Button>
+          </div>
         </SheetFooter>
       </form>
     </Form>

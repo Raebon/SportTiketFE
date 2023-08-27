@@ -5,20 +5,20 @@ import { useUserWalletQuery } from '../../../admin/api/queries/user/getUserWalle
 import { useNavigate } from 'react-router-dom';
 
 interface WalletInfoProps {
-  closeDropdownMenu(e:boolean):void
+  closeDropdownMenu(e: boolean): void;
 }
 
-export const WalletInfo: FC<WalletInfoProps> = ({closeDropdownMenu}) => {
+export const WalletInfo: FC<WalletInfoProps> = ({ closeDropdownMenu }) => {
   const navigate = useNavigate();
   const { data } = useUserWalletQuery();
 
   const redirectToCashout = () => {
-    navigate('/my-account/cashout')
-    closeDropdownMenu(true)
+    navigate('/my-account/cashout');
+    closeDropdownMenu(true);
   };
   const redirectToDeposit = () => {
-    navigate('/my-account/deposit')
-    closeDropdownMenu(true)
+    navigate('/my-account/deposit');
+    closeDropdownMenu(true);
   };
 
   return (
