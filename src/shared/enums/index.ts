@@ -1,7 +1,8 @@
-export enum TiketStatuses {
-  'not-evaluated',
-  'victory',
-  'defeat'
+export enum TiketStatusEnum {
+  defeat = 'defeat',
+  victory = 'victory',
+  notEvaluated = 'not-evaluated',
+  cashout = 'cashout'
 }
 
 export enum WalletLogEnum {

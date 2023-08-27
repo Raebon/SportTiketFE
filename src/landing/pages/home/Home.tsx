@@ -1,25 +1,27 @@
 import { TiketCardComponent } from '../../../admin/components/tiket-card/TiketCardComponent';
 
-import { TopTicket } from '../../../shared/service/tiket/interface';
-let victory: TopTicket = new TopTicket(
-  '123213asdasdasdasd',
-  'Tiket #2',
-  'Vikin',
-  'victory',
-  1.16,
-  100,
-  new Date('2023-08-25T12:59:47.240Z')
-);
+import { TTiket } from '../../../shared/service/tiket/interfaces';
+let victory: TTiket = {
+  id: "Asdasd",
+  name: "Tike #1",
+  userId: "asdasd",
+  userName:"Reabos",
+  bet: 123123,
+  rate: 1.2,
+  approximateEndDatetime: new Date('2023-08-25T13:59:47.240Z'),
+  status: "victory"
+}
 
-let defeat: TopTicket = new TopTicket(
-  '123213asdasdasdasdsadasd',
-  'Tiket #3',
-  'Raebon',
-  'defeat',
-  5.16,
-  100,
-  new Date('2023-08-25T13:59:47.240Z')
-);
+let defeat: TTiket = {  
+  id: "Asdasd",
+name: "Tike #1",
+userId: "asdasd",
+userName:"Reabos",
+bet: 123123,
+rate: 1.2,
+approximateEndDatetime: new Date('2023-08-25T13:59:47.240Z'),
+status: "victory"
+}
 const Home = () => {
   return (
     <div className="my-5 flex flex-col justify-center">

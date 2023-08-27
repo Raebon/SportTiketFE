@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useTiketListQuery } from '../../api/queries/getTiketListQuery';
+import { useTiketListQuery } from '../../api/queries/tiket/getTiketListQuery';
 import { TiketCardComponent } from '../tiket-card/TiketCardComponent';
 
 interface TiketListComponentProps {}

@@ -11,13 +11,13 @@ import {
   CardTitle
 } from '../../../shared/components/ui/card';
 import { Separator } from '../../../shared/components/ui/separator';
-import { TTiket, TTopTiket, TopTicket } from '../../../shared/service/tiket/interface';
+import { TTiket } from '../../../shared/service/tiket/interfaces';
 import { CheckTiketButton } from './CheckTiketButton';
 import { DeleteTiketButton } from './DeleteTiketButton';
 import { getStatusText } from './utils';
 
 interface TiketCardComponentProps {
-  item: TTiket | TTopTiket;
+  item: TTiket ;
 }
 
 export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item }) => {
@@ -34,8 +34,8 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item }) => {
     }
   };
 
-  function isTTopTicket(obj: TTiket | TTopTiket): obj is TTopTiket {
-    return obj instanceof TopTicket;
+  function isTTopTicket():boolean {
+    return item.userName ? true : false
   }
 
   const canCheckTiket = (aproximateEndDatetime: Date): boolean => {
@@ -54,20 +54,20 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item }) => {
       <CardContent className="font-bold">
         <div className="grid grid-cols-2 gap-2 text-sm min-w-[225px]">
           <p className="text-gray-400">Celkový kurz:</p>
-          <p className="text-end">{item.totalRate}</p>
+          <p className="text-end">{item.rate}</p>
           <p className="text-gray-400">Vklad:</p>
-          <p className="text-end">{item.deposit} Kč</p>
+          <p className="text-end">{item.bet} Kč</p>
           <p className="text-gray-400">Možná výhra:</p>
-          <p className="text-end">{Math.ceil(item.totalRate * item.deposit * 100) / 100} Kč</p>
-          {isTTopTicket(item) && (
+          <p className="text-end">{Math.ceil(item.rate * item.bet * 100) / 100} Kč</p>
+          {isTTopTicket() && (
             <>
               <p className="text-gray-400">Hráč</p>
-              <p className="text-end">{item.username}</p>
+              <p className="text-end">{item.userName}</p>
             </>
           )}
         </div>
       </CardContent>
-      {!isTTopTicket(item) && (
+      {!isTTopTicket() && (
         <CardFooter className="flex justify-end space-x-1">
           <DeleteTiketButton id={item.id} name={item.name} />
           <CheckTiketButton

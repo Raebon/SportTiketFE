@@ -2,12 +2,12 @@ import { ClipboardCheck } from 'lucide-react';
 import { FC, useState } from 'react';
 import { buttonVariants } from '../../../shared/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '../../../shared/components/ui/popover';
-import { TTiketStatuses } from '../../../shared/service/tiket/interface';
+import { TiketStatusType } from '../../../shared/service/tiket/interfaces';
 import { CheckTiketForm } from './CheckTiketForm';
 
 interface CheckTiketPopoverProps {
   id: string;
-  status: TTiketStatuses;
+  status: TiketStatusType;
   disabled: boolean;
 }
 

@@ -16,6 +16,8 @@ import {
 import { Input } from '../../../shared/components/ui/input';
 import { SheetClose, SheetFooter } from '../../../shared/components/ui/sheet';
 import { useUserWalletQuery } from '../../api/queries/user/getUserWalletQuery';
+import { useCreateTiketMutation } from '../../api/mutations/tiket/useCreateTiket';
+import { TiketStatusEnum } from '../../../shared/enums';
 
 const formSchema = z.object({
   name: z.string().min(3).max(50),
@@ -35,6 +37,7 @@ interface CreateTiketFormProps {
 export const CreateTiketForm: FC<CreateTiketFormProps> = ({ closeSheet }) => {
   const [approximateEndDateTime, setApproximateEndDateTime] = useState<Date>(new Date());
   const { data } = useUserWalletQuery();
+  const createTiket = useCreateTiketMutation()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,8 +50,12 @@ export const CreateTiketForm: FC<CreateTiketFormProps> = ({ closeSheet }) => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     values.approximateEndDatetime = approximateEndDateTime;
-    console.log(values);
-    closeSheet(true);
+    const payload ={...values, rate:Number(values.rate),bet: Number(values.bet ), status:TiketStatusEnum.notEvaluated }
+    createTiket.mutate(payload as any, {
+      onSuccess(){
+        closeSheet(true);
+      }
+    })
   };
   return (
     <Form {...form}>

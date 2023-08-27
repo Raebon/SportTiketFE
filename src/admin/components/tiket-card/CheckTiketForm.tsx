@@ -14,18 +14,18 @@ import {
 import { RadioGroup, RadioGroupItem } from '../../../shared/components/ui/radio-group';
 import { toast } from '../../../shared/components/ui/use-toast';
 import { TiketStatuses } from '../../../shared/constants';
-import { TTiketStatuses } from '../../../shared/service/tiket/interface';
+import { TiketStatusType } from '../../../shared/service/tiket/interfaces';
 import { getStatusText } from './utils';
 
 const FormSchema = z.object({
-  type: z.enum(['not-evaluated', 'victory', 'defeat'], {
+  type: z.enum(['not-evaluated', 'victory', 'defeat', 'cashout'], {
     required_error: 'Je potřeba vybrat stav k vyhodnocení tiketu.'
   })
 });
 
 interface CheckTiketFormProps {
   id: string;
-  status: TTiketStatuses;
+  status: TiketStatusType;
   closePopover(e: boolean): void;
 }
 
