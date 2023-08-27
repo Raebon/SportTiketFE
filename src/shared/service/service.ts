@@ -1,4 +1,5 @@
 import { AuthService } from './auth/auth-service';
+import { LogService } from './log/log-service';
 import { NotificationService } from './notification/notification-service';
 import { TiketService } from './tiket/tiket-service';
 import { TokenService } from './token/token-service';
@@ -10,12 +11,14 @@ class Service {
   private _notification;
   private _token;
   private _user;
+  private _log;
   constructor() {
     this._auth = new AuthService();
     this._tiket = new TiketService();
     this._notification = new NotificationService();
     this._token = new TokenService();
     this._user = new UserService();
+    this._log = new LogService();
   }
   get auth(): AuthService {
     return this._auth;
@@ -31,6 +34,10 @@ class Service {
 
   get token(): TokenService {
     return this._token;
+  }
+
+  get log(): LogService {
+    return this._log;
   }
 
   get user(): UserService {

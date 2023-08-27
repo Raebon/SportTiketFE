@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { MyAccountMenu } from '../../components/my-account-menu/MyAccountMenu';
+import { MyAccountMenu } from '../../components/my-account/MyAccountMenu';
 import { Outlet } from 'react-router-dom';
 
 interface MyAccountProps {}

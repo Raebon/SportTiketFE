@@ -17,67 +17,65 @@ import { IDepositRequest } from '../../../shared/service/user/interface';
 import { useWalletDepositOrCashoutMutation } from '../../api/mutations/user/useWalletDeposit';
 
 interface CashoutFormProps {
-  walletId:string
+  walletId: string;
 }
 
 export const formSchema = z.object({
-  amount:z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+  amount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
     message: 'Chyba! Zadali jste špatný formát'
-  }),
+  })
 });
 
-const CashoutForm: FC<CashoutFormProps> = ({walletId}) => {
-  const cashout = useWalletDepositOrCashoutMutation()
+const CashoutForm: FC<CashoutFormProps> = ({ walletId }) => {
+  const cashout = useWalletDepositOrCashoutMutation();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: "0"
+      amount: '0'
     }
   });
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const payload:IDepositRequest = {
+    const payload: IDepositRequest = {
       id: walletId,
-      amount: -Number(values.amount )
-    }
+      amount: -Number(values.amount)
+    };
     cashout.mutate(payload, {
       onSuccess() {
         toast({
           title: `Úspěšně jste vybral částku ${payload.amount} Kč`
-        })
-        form.setValue("amount", "0")
+        });
+        form.setValue('amount', '0');
       },
-      onError(){
+      onError() {
         toast({
-          variant:"destructive",
+          variant: 'destructive',
           title: `Při výběru částky se akce nezdařila`
-        })
+        });
       }
-    })
-  }
-  return <Form {...form}>
-  <form onSubmit={form.handleSubmit(onSubmit)}  className="flex w-full max-w-sm space-x-2">
+    });
+  };
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full max-w-sm space-x-2">
+        <FormField
+          control={form.control}
+          name="amount"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input type="number" placeholder="Zadejte částku..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="space-x-2" disabled={false}>
+          {false && <Loader2 className="animate-spin" />}
+          <span>Vybrat</span>
+        </Button>
+      </form>
+    </Form>
+  );
+};
 
-<FormField
-  control={form.control}
-  name="amount"
-
-  render={({ field }) => (
-    <FormItem>
-      <FormControl >
-    <Input type="number" placeholder="Zadejte částku..." {...field} />
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
-  />
-  <Button type="submit" className='space-x-2' disabled={false}>
-    {false && (<Loader2 className='animate-spin'/>)}
-    <span>
-  Vybrat
-    </span>
-    </Button>
-  </form>
-</Form>
-}
-
-export default CashoutForm
+export default CashoutForm;

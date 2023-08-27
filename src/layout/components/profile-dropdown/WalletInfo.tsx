@@ -4,14 +4,22 @@ import { Button } from '../../../shared/components/ui/button';
 import { useUserWalletQuery } from '../../../admin/api/queries/user/getUserWalletQuery';
 import { useNavigate } from 'react-router-dom';
 
-interface WalletInfoProps {}
+interface WalletInfoProps {
+  closeDropdownMenu(e:boolean):void
+}
 
-export const WalletInfo: FC<WalletInfoProps> = ({}) => {
+export const WalletInfo: FC<WalletInfoProps> = ({closeDropdownMenu}) => {
   const navigate = useNavigate();
   const { data } = useUserWalletQuery();
 
-  const redirectToCashout = () => navigate('/my-account/cashout');
-  const redirectToDeposit = () => navigate('/my-account/deposit');
+  const redirectToCashout = () => {
+    navigate('/my-account/cashout')
+    closeDropdownMenu(true)
+  };
+  const redirectToDeposit = () => {
+    navigate('/my-account/deposit')
+    closeDropdownMenu(true)
+  };
 
   return (
     <DropdownMenuLabel className="grid gap-3 text-xs">
