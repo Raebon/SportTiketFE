@@ -1,5 +1,5 @@
+import { XOctagon } from 'lucide-react';
 import { FC } from 'react';
-import { buttonVariants } from '../../../shared/components/ui/button';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,8 +11,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from '../../../shared/components/ui/alert-dialog';
-import { XOctagon } from 'lucide-react';
-import { toast } from '../../../shared/components/ui/use-toast';
+import { buttonVariants } from '../../../shared/components/ui/button';
+import { useDeleteTiketMutation } from '../../api/mutations/tiket/useDeleteTiket';
 
 interface DeleteTiketButtonProps {
   id: string;
@@ -20,11 +20,9 @@ interface DeleteTiketButtonProps {
 }
 
 export const DeleteTiketButton: FC<DeleteTiketButtonProps> = ({ id, name }) => {
+  const deleteTiket = useDeleteTiketMutation();
   const onConfirm = () => {
-    console.log(id);
-    toast({
-      title: 'Vaše akce byla úspěšná'
-    });
+    deleteTiket.mutate(id);
   };
   return (
     <AlertDialog>

@@ -1,17 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { service } from '../../../../shared/service/service';
-import { CreateTiketDto } from '../../../../shared/service/tiket/interfaces';
-import { getTiketListQueryKey } from '../../queries/tiket/getTiketListQuery';
 import { toast } from '../../../../shared/components/ui/use-toast';
+import { service } from '../../../../shared/service/service';
+import { getTiketListQueryKey } from '../../queries/tiket/getTiketListQuery';
 
-export const useCreateTiketMutation = () => {
+export const useDeleteTiketMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation((value: CreateTiketDto) => service.tiket.create(value), {
+  return useMutation((tiketId: string) => service.tiket.delete(tiketId), {
     onSuccess: () => {
       toast({
         title: 'Vaše akce byla úspěšná',
-        description: 'Tiket byl založen'
+        description: 'Tiket byl odstraněn'
       });
       queryClient.invalidateQueries(getTiketListQueryKey());
     },
@@ -19,7 +18,7 @@ export const useCreateTiketMutation = () => {
       toast({
         variant: 'destructive',
         title: 'Vaše akce byla neúspěšná',
-        description: 'Při založení tiketu nastala chyba'
+        description: 'Při odstranění tiketu nastala chyba'
       });
     }
   });

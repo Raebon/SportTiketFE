@@ -7,7 +7,7 @@ const TiketManagement: FC<TiketManagementProps> = ({}) => {
   return (
     <>
       <TiketPageBannerComponent />
-      <TiketListComponent />;
+      <TiketListComponent />
     </>
   );
 };

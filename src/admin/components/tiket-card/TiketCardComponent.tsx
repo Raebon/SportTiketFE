@@ -15,12 +15,14 @@ import { TTiket } from '../../../shared/service/tiket/interfaces';
 import { CheckTiketButton } from './CheckTiketButton';
 import { DeleteTiketButton } from './DeleteTiketButton';
 import { getStatusText } from './utils';
+import { formatNumber } from '../../../shared/lib/utils';
 
 interface TiketCardComponentProps {
-  item: TTiket ;
+  item: TTiket;
+  isPublic: boolean;
 }
 
-export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item }) => {
+export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item, isPublic }) => {
   const getStatusVariant = (status: string) => {
     switch (status) {
       case 'not-evaluated':
@@ -33,10 +35,6 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item }) => {
         'default';
     }
   };
-
-  function isTTopTicket():boolean {
-    return item.userName ? true : false
-  }
 
   const canCheckTiket = (aproximateEndDatetime: Date): boolean => {
     let dateNow = new Date();
@@ -56,10 +54,10 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item }) => {
           <p className="text-gray-400">Celkový kurz:</p>
           <p className="text-end">{item.rate}</p>
           <p className="text-gray-400">Vklad:</p>
-          <p className="text-end">{item.bet} Kč</p>
+          <p className="text-end">{formatNumber(item.bet)}</p>
           <p className="text-gray-400">Možná výhra:</p>
-          <p className="text-end">{Math.ceil(item.rate * item.bet * 100) / 100} Kč</p>
-          {isTTopTicket() && (
+          <p className="text-end">{formatNumber(Math.ceil(item.rate * item.bet * 100) / 100)}</p>
+          {isPublic && (
             <>
               <p className="text-gray-400">Hráč</p>
               <p className="text-end">{item.userName}</p>
@@ -67,7 +65,7 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item }) => {
           )}
         </div>
       </CardContent>
-      {!isTTopTicket() && (
+      {!isPublic && (
         <CardFooter className="flex justify-end space-x-1">
           <DeleteTiketButton id={item.id} name={item.name} />
           <CheckTiketButton

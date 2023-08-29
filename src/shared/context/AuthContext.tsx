@@ -7,6 +7,7 @@ export type AuthContextType = {
   accessToken: string | null;
   loginLoading: boolean;
   loginError: boolean;
+  lastLoginDate: Date | null;
   setAccessToken: (e: any) => void;
   login: (e: any) => void;
   logout: () => void;
@@ -25,6 +26,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   );
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<boolean>(false);
+  const [lastLoginDate, setLastLoginDate] = useState<Date | null>(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -36,15 +38,19 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       .login(e)
       .then((res) => {
         setLoading(false);
-        setAccessToken(res);
-        service.token.setAccessToken(String(res));
+        setAccessToken(res.token);
+        service.token.setAccessToken(String(res.token));
+        service.token.setInfoToken(res);
+        setLastLoginDate(null);
         setLoginLoading(false);
         setLoginError(false);
+
         history(window.location.pathname);
       })
       .catch((err) => {
         setLoginLoading(false);
         setLoginError(true);
+        setLastLoginDate(null);
         toast({
           title: err.response.data.message,
           variant: 'destructive'
@@ -63,6 +69,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     accessToken: accessToken,
     loginLoading: loginLoading,
     loginError: loginError,
+    lastLoginDate: lastLoginDate,
     setAccessToken: setAccessToken,
     login: login,
     logout: logout

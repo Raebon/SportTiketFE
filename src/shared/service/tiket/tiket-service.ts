@@ -19,4 +19,14 @@ export class TiketService {
       throw error;
     }
   }
+
+  public async delete(tiketId: string) {
+    try {
+      return await api.delete('/tiket/delete', {
+        data: {
+          tiketId: tiketId
+        }
+      });
+    } catch (error) {}
+  }
 }

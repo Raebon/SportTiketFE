@@ -12,10 +12,9 @@ import {
   useForm
 } from '../../../shared/components/ui/form';
 import { Input } from '../../../shared/components/ui/input';
-import { toast } from '../../../shared/components/ui/use-toast';
+import { WalletLogEnum } from '../../../shared/enums';
 import { IBalanceUpdateRequest } from '../../../shared/service/user/interface';
 import { useWalletDepositOrCashoutMutation } from '../../api/mutations/user/useWalletDeposit';
-import { WalletLogEnum } from '../../../shared/enums';
 
 interface CashoutFormProps {
   walletId: string;
@@ -43,16 +42,7 @@ const CashoutForm: FC<CashoutFormProps> = ({ walletId }) => {
     };
     cashout.mutate(payload, {
       onSuccess() {
-        toast({
-          title: `Úspěšně jste vybral částku ${payload.amount} Kč`
-        });
         form.setValue('amount', '0');
-      },
-      onError() {
-        toast({
-          variant: 'destructive',
-          title: `Při výběru částky se akce nezdařila`
-        });
       }
     });
   };

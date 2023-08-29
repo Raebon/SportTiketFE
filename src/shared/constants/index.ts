@@ -1,1 +1,1 @@
-export const TiketStatuses = ['not-evaluated', 'victory', 'defeat'];
+export const TiketStatuses = ['not-evaluated', 'victory', 'defeat', 'cashout'];

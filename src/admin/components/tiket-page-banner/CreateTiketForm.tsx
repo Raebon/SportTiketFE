@@ -37,7 +37,7 @@ interface CreateTiketFormProps {
 export const CreateTiketForm: FC<CreateTiketFormProps> = ({ closeSheet }) => {
   const [approximateEndDateTime, setApproximateEndDateTime] = useState<Date>(new Date());
   const { data } = useUserWalletQuery();
-  const createTiket = useCreateTiketMutation()
+  const createTiket = useCreateTiketMutation();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,12 +50,17 @@ export const CreateTiketForm: FC<CreateTiketFormProps> = ({ closeSheet }) => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     values.approximateEndDatetime = approximateEndDateTime;
-    const payload ={...values, rate:Number(values.rate),bet: Number(values.bet ), status:TiketStatusEnum.notEvaluated }
+    const payload = {
+      ...values,
+      rate: Number(values.rate),
+      bet: Number(values.bet),
+      status: TiketStatusEnum.notEvaluated
+    };
     createTiket.mutate(payload as any, {
-      onSuccess(){
+      onSuccess() {
         closeSheet(true);
       }
-    })
+    });
   };
   return (
     <Form {...form}>

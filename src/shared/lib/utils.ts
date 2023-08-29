@@ -4,3 +4,12 @@ import { twMerge } from 'tailwind-merge';
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const formatNumber = (val: number) => {
+  return val.toLocaleString('cs-CZ', {
+    style: 'currency',
+    currency: 'CZK',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+};
