@@ -1,7 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { service } from '../shared/service/service';
-
 interface Props {
   children: JSX.Element;
 }

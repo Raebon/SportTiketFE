@@ -8,6 +8,7 @@ export type AuthContextType = {
   loginLoading: boolean;
   loginError: boolean;
   lastLoginDate: Date | null;
+  isUserLogged:boolean
   setAccessToken: (e: any) => void;
   login: (e: any) => void;
   logout: () => void;
@@ -27,7 +28,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<boolean>(false);
   const [lastLoginDate, setLastLoginDate] = useState<Date | null>(null);
-
+const [isUserLogged, setIsUserLogged] = useState<boolean>(false)
   const [loading, setLoading] = useState(true);
 
   const history = useNavigate();
@@ -41,6 +42,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         setAccessToken(res.token);
         service.token.setAccessToken(String(res.token));
         service.token.setInfoToken(res);
+        setIsUserLogged(true)
         setLastLoginDate(null);
         setLoginLoading(false);
         setLoginError(false);
@@ -50,6 +52,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       .catch((err) => {
         setLoginLoading(false);
         setLoginError(true);
+        setIsUserLogged(false)
         setLastLoginDate(null);
         toast({
           title: err.response.data.message,
@@ -61,7 +64,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   let logout = () => {
     setAccessToken(null);
     setLoading(false);
-    service.token.removeTokens();
+    setIsUserLogged(false)
+    service.auth.logout()
     history('/');
   };
 
@@ -70,6 +74,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     loginLoading: loginLoading,
     loginError: loginError,
     lastLoginDate: lastLoginDate,
+    isUserLogged: isUserLogged,
     setAccessToken: setAccessToken,
     login: login,
     logout: logout

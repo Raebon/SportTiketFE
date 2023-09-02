@@ -17,6 +17,10 @@ export class AuthService {
     }
   }
 
+  logout() {
+    service.token.removeTokens();
+  }
+
   public isLogged(): boolean {
     const token = service.token.getLocalAccessToken() ? true : false;
     return token;

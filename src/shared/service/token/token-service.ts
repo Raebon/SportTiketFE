@@ -8,8 +8,11 @@ export class TokenService {
   public getLocalAccessToken() {
     return localStorage.getItem('accessToken');
   }
-  public getInfoToken(): AuthResponse {
-    return JSON.parse(localStorage.getItem('info') ?? '');
+  public getInfoToken(): AuthResponse | null {
+    if (!!localStorage.getItem('info')) {
+      return JSON.parse(localStorage.getItem('info') ?? '');
+    }
+    return null;
   }
 
   public updateLocalAccessToken(token: string) {
@@ -40,10 +43,6 @@ export class TokenService {
     return localStorage.getItem('loginModalChecked')
       ? JSON.parse(localStorage.getItem('loginModalChecked')!)
       : '';
-  }
-
-  public clearFirstLoginModalSeenToken() {
-    return localStorage.removeItem('loginModalChecked');
   }
 
   public removeTokens() {

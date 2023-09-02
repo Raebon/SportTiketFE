@@ -28,7 +28,7 @@ const FirstLoginTodayDialog: FC<FirstLoginTodayDialogProps> = ({}) => {
   const [show, setShow] = useState<boolean>(false);
 
   useEffect(() => {
-    const cond = isToday(lastLoginDateFromToken.lastLoginDate) && !firstLoginModalChecked
+    const cond = isToday(lastLoginDateFromToken?.lastLoginDate) && !isToday(firstLoginModalChecked) || !firstLoginModalChecked
     return () => {
       if (cond) {
         setShow(true);
