@@ -9,7 +9,8 @@ let victory: TTiket = {
   bet: 123123,
   rate: 1.2,
   approximateEndDatetime: new Date('2023-08-25T13:59:47.240Z'),
-  status: 'victory'
+  status: 'victory',
+  cashoutMoney: 0,
 };
 
 let defeat: TTiket = {
@@ -20,7 +21,8 @@ let defeat: TTiket = {
   bet: 123123,
   rate: 1.2,
   approximateEndDatetime: new Date('2023-08-25T13:59:47.240Z'),
-  status: 'victory'
+  status: 'victory',
+  cashoutMoney: 0,
 };
 const Home = () => {
   return (

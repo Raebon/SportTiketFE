@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../shared/components/ui/button';
-import { IMenuItems } from './MenuItems';
+import { IMenuItems } from '../../shared/interfaces';
 
 interface Props {
   menuItems: Array<IMenuItems>;

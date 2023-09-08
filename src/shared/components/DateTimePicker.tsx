@@ -20,7 +20,7 @@ export function DateTimePicker({ date, setDate }: DateTimePickerProps) {
     DateTime.fromJSDate(date)
   );
 
-  const handleSelect: SelectSingleEventHandler = (day, selected) => {
+  const handleSelect: SelectSingleEventHandler = (_, selected) => {
     const selectedDay = DateTime.fromJSDate(selected);
     const modifiedDay = selectedDay.set({
       hour: selectedDateTime.hour,

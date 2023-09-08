@@ -1,9 +1,8 @@
 import { FC, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../shared/components/ui/button';
-import { IMenuItems } from '../../shared/interfaces';
-import { service } from '../../shared/service/service';
 import AuthContext, { AuthContextType } from '../../shared/context/AuthContext';
+import { IMenuItems } from '../../shared/interfaces';
 
 interface Props {
   menuItems: Array<IMenuItems>;
