@@ -11,7 +11,7 @@ import {
   CardTitle
 } from '../../../shared/components/ui/card';
 import { Separator } from '../../../shared/components/ui/separator';
-import { TTiket } from '../../../shared/service/tiket/interfaces';
+import { TTiket, TiketStatusEnum } from '../../../shared/service/tiket/interfaces';
 import { CheckTiketButton } from './CheckTiketButton';
 import { DeleteTiketButton } from './DeleteTiketButton';
 import { getStatusText } from './utils';
@@ -31,6 +31,8 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item, isPublic
         return 'success';
       case 'defeat':
         return 'destructive';
+      case 'cashout':
+        return 'cashout';
       default:
         'default';
     }
@@ -56,7 +58,20 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item, isPublic
           <p className="text-gray-400">Vklad:</p>
           <p className="text-end">{formatNumber(item.bet)}</p>
           <p className="text-gray-400">Možná výhra:</p>
-          <p className="text-end">{formatNumber(Math.ceil(item.rate * item.bet * 100) / 100)}</p>
+          <p className="text-end ">
+            {item.status === TiketStatusEnum.cashout ? (
+              <>
+                <>
+                  <small className="opacity-70 pr-2 line-through">
+                    {formatNumber(Math.ceil(item.rate * item.bet * 100) / 100)}
+                  </small>
+                  {formatNumber(item.cashoutMoney)}
+                </>
+              </>
+            ) : (
+              <>{formatNumber(Math.ceil(item.rate * item.bet * 100) / 100)}</>
+            )}
+          </p>
           {isPublic && (
             <>
               <p className="text-gray-400">Hráč</p>

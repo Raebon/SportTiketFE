@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
-import { CreateTiketDto, TTiket } from './interfaces';
 import api from '../../lib/auth-interceptors';
+import { CreateTiketDto, TTiket, UpdateStatusTiket, UpdateTiketDto } from './interfaces';
 
 export class TiketService {
   public async getList() {
@@ -28,5 +28,14 @@ export class TiketService {
         }
       });
     } catch (error) {}
+  }
+
+  public async updateStatus(body: UpdateStatusTiket) {
+    try {
+      const request = new UpdateTiketDto(body);
+      return await api.post('/tiket/update-status', request);
+    } catch (error) {
+      throw error;
+    }
   }
 }

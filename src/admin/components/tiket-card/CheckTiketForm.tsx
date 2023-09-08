@@ -11,16 +11,23 @@ import {
   FormMessage,
   useForm
 } from '../../../shared/components/ui/form';
+import { Input } from '../../../shared/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '../../../shared/components/ui/radio-group';
-import { toast } from '../../../shared/components/ui/use-toast';
 import { TiketStatuses } from '../../../shared/constants';
-import { TiketStatusType } from '../../../shared/service/tiket/interfaces';
+import { TiketStatusType, UpdateStatusTiket } from '../../../shared/service/tiket/interfaces';
+import { useUpdateStatusTiketMutation } from '../../api/mutations/tiket/useUpdateStatusTiket';
 import { getStatusText } from './utils';
 
 const FormSchema = z.object({
   type: z.enum(['not-evaluated', 'victory', 'defeat', 'cashout'], {
     required_error: 'Je potřeba vybrat stav k vyhodnocení tiketu.'
-  })
+  }),
+  cashoutMoney: z
+    .string()
+    .refine((val) => !Number.isNaN(parseInt(val, 10)), {
+      message: 'Chyba! Zadali jste špatný formát'
+    })
+    .optional()
 });
 
 interface CheckTiketFormProps {
@@ -30,27 +37,34 @@ interface CheckTiketFormProps {
 }
 
 export const CheckTiketForm: FC<CheckTiketFormProps> = ({ id, status, closePopover }) => {
+  const updateStatus = useUpdateStatusTiketMutation();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      type: status
+      type: status,
+      cashoutMoney: "0"
     }
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    closePopover(true);
-    toast({
-      title: 'Vaše akce byla úspěšná',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      )
-    });
+    const updatedTiket: UpdateStatusTiket = {
+      id:id,
+      status: data.type as TiketStatusType,
+      cashoutMoney: Number(data.cashoutMoney)
+    }
+    updateStatus.mutate(
+      updatedTiket,
+      {
+        onSuccess: () => {
+          closePopover(true);
+        }
+      }
+    );
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-6">
+        <div className="space-y-3">
         <FormField
           control={form.control}
           name="type"
@@ -62,7 +76,7 @@ export const CheckTiketForm: FC<CheckTiketFormProps> = ({ id, status, closePopov
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                   className="flex flex-col space-y-1"
-                >
+                  >
                   {TiketStatuses.map((item, index) => {
                     return (
                       <FormItem className="flex items-center space-x-3 space-y-0" key={index}>
@@ -79,9 +93,27 @@ export const CheckTiketForm: FC<CheckTiketFormProps> = ({ id, status, closePopov
             </FormItem>
           )}
         />
+        {form.watch("type") ===  "cashout" && (
+          <FormField
+          
+          control={form.control}
+          name="cashoutMoney"
+          render={({ field }) => (
+            <FormItem className='m-0 space-y-0'>
+              <FormControl >
+                <Input  type="number" placeholder="Zadejte částku..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+          />
+          )}
+          </div>
+          <div className='flex justify-end'>
         <Button variant="default" type="submit">
-          Submit
+          Vyhodnotit
         </Button>
+          </div>
       </form>
     </Form>
   );

@@ -72,13 +72,13 @@ export const SignUpForm = ({}) => {
     const newUser = new CreateUserDto(values);
     signUp.mutate(newUser, {
       onSuccess: () => {
-        let loginDetail:LoginDetail= {
+        let loginDetail: LoginDetail = {
           userName: newUser.userName,
           password: newUser.password
-        }
+        };
         login(loginDetail).then(() => {
-          navigate("/")
-        })
+          navigate('/');
+        });
       }
     });
   };
