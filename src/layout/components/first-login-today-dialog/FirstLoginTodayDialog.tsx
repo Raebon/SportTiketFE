@@ -28,13 +28,15 @@ const FirstLoginTodayDialog: FC<FirstLoginTodayDialogProps> = ({}) => {
   const [show, setShow] = useState<boolean>(false);
 
   useEffect(() => {
-    const cond = isToday(lastLoginDateFromToken?.lastLoginDate) && !isToday(firstLoginModalChecked) || !firstLoginModalChecked
+    const cond =
+      (isToday(lastLoginDateFromToken?.lastLoginDate) && !isToday(firstLoginModalChecked)) ||
+      !firstLoginModalChecked;
     return () => {
       if (cond) {
         setShow(true);
       }
-    }
-  }, []);  
+    };
+  }, []);
 
   const hadleCloseModal = (e: boolean) => {
     setShow(e);

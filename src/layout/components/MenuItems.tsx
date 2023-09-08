@@ -1,8 +1,9 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../shared/components/ui/button';
 import { IMenuItems } from '../../shared/interfaces';
 import { service } from '../../shared/service/service';
+import AuthContext, { AuthContextType } from '../../shared/context/AuthContext';
 
 interface Props {
   menuItems: Array<IMenuItems>;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const MenuItems: FC<Props> = ({ menuItems, privateMenuItems }) => {
+  const { isUserLogged } = useContext<AuthContextType | any>(AuthContext);
   const navigate = useNavigate();
   const navigateToPath = (path: string) => {
     navigate(path);
@@ -37,7 +39,7 @@ const MenuItems: FC<Props> = ({ menuItems, privateMenuItems }) => {
               </Button>
             );
           })}
-          {service.auth.isLogged()&&
+          {isUserLogged &&
             privateMenuItems.map((item, index) => {
               return (
                 <Button

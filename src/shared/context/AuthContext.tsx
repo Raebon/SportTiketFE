@@ -8,7 +8,7 @@ export type AuthContextType = {
   loginLoading: boolean;
   loginError: boolean;
   lastLoginDate: Date | null;
-  isUserLogged:boolean
+  isUserLogged: boolean;
   setAccessToken: (e: any) => void;
   login: (e: any) => void;
   logout: () => void;
@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   const [loginLoading, setLoginLoading] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<boolean>(false);
   const [lastLoginDate, setLastLoginDate] = useState<Date | null>(null);
-const [isUserLogged, setIsUserLogged] = useState<boolean>(false)
+  const [isUserLogged, setIsUserLogged] = useState<boolean>(service.auth.isLogged());
   const [loading, setLoading] = useState(true);
 
   const history = useNavigate();
@@ -38,21 +38,20 @@ const [isUserLogged, setIsUserLogged] = useState<boolean>(false)
     service.auth
       .login(e)
       .then((res) => {
+        history(window.location.pathname);
         setLoading(false);
         setAccessToken(res.token);
         service.token.setAccessToken(String(res.token));
         service.token.setInfoToken(res);
-        setIsUserLogged(true)
+        setIsUserLogged(true);
         setLastLoginDate(null);
         setLoginLoading(false);
         setLoginError(false);
-
-        history(window.location.pathname);
       })
       .catch((err) => {
         setLoginLoading(false);
         setLoginError(true);
-        setIsUserLogged(false)
+        setIsUserLogged(false);
         setLastLoginDate(null);
         toast({
           title: err.response.data.message,
@@ -64,8 +63,8 @@ const [isUserLogged, setIsUserLogged] = useState<boolean>(false)
   let logout = () => {
     setAccessToken(null);
     setLoading(false);
-    setIsUserLogged(false)
-    service.auth.logout()
+    setIsUserLogged(false);
+    service.auth.logout();
     history('/');
   };
 

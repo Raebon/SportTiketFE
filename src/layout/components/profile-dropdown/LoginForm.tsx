@@ -14,6 +14,7 @@ import {
 import { Input } from '../../../shared/components/ui/input';
 import AuthContext, { AuthContextType } from '../../../shared/context/AuthContext';
 import { Loader2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const formSchema = z.object({
   userName: z.string().min(3).max(50),
@@ -22,9 +23,10 @@ const formSchema = z.object({
 
 interface LoginFormProps {
   login(e: z.infer<typeof formSchema>): void;
+  closePopover(e: boolean): void;
 }
 
-const LoginForm: FC<LoginFormProps> = ({ login }) => {
+const LoginForm: FC<LoginFormProps> = ({ login, closePopover }) => {
   const { loginLoading } = useContext<AuthContextType | any>(AuthContext);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -66,7 +68,15 @@ const LoginForm: FC<LoginFormProps> = ({ login }) => {
             </FormItem>
           )}
         />
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
+          <Button
+            type="button"
+            variant={'secondary'}
+            className="mt-4"
+            onClick={() => closePopover(true)}
+          >
+            <Link to="/sign-up">Registrovat se</Link>
+          </Button>
           <Button type="submit" variant={'default'} className="mt-4 flex gap-2">
             {loginLoading && <Loader2 className="animate-spin" />}
             Přihlásit

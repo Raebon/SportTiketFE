@@ -8,14 +8,14 @@ import { Outlet } from 'react-router-dom';
 } */
 
 const Landing = () => {
-/*   useEffect(() => {
+  /*   useEffect(() => {
  
   
     return () => {
       test()
     }
   }, []) */
-  
+
   return (
     <React.Suspense fallback={'loading'}>
       <Outlet />

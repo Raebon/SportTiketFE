@@ -4,6 +4,7 @@ import PrivateRoute from './PrivateRoutes';
 
 const Landing = React.lazy(() => import('../landing/landing'));
 const HomePage = React.lazy(() => import('../landing/pages/home/Home'));
+const SignUp = React.lazy(() => import('../landing/pages/sign-up/SignUp'));
 
 const Admin = React.lazy(() => import('../admin/admin'));
 const DashboardPage = React.lazy(() => import('../admin/pages/dashboard/DashboardPage'));
@@ -26,6 +27,7 @@ export const RoutesComponent = () => {
           <Route path="" element={<Landing />}>
             <Route path="/" element={<HomePage />} />
             <Route path="home" element={<HomePage />} />
+            <Route path="sign-up" element={<SignUp />} />
           </Route>
           <Route
             path=""
