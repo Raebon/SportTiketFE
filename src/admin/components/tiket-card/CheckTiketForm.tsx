@@ -17,7 +17,7 @@ import { TiketStatuses } from '../../../shared/constants';
 import {
   TTiket,
   TiketStatusType,
-  UpdateStatusTiket
+  UpdateTiketStatus
 } from '../../../shared/service/tiket/interfaces';
 import { useUpdateStatusTiketMutation } from '../../api/mutations/tiket/useUpdateStatusTiket';
 import { getStatusText } from './utils';
@@ -57,12 +57,12 @@ export const CheckTiketForm: FC<CheckTiketFormProps> = ({ closePopover, tiket })
   };
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    const updatedTiket: UpdateStatusTiket = {
+    const updatedTiket: UpdateTiketStatus = {
       id: tiket.id,
-      status: data.type as TiketStatusType,
       bet: tiket.bet,
       rate: tiket.rate,
-      cashoutMoney: Number(data.cashoutMoney)
+      cashoutMoney: Number(data.cashoutMoney),
+      status: data.type as TiketStatusType
     };
     updateStatus.mutate(updatedTiket, {
       onSuccess: () => {

@@ -33,13 +33,13 @@ const Home = () => {
           <h3 className="scroll-m-20 text-xl font-semibold tracking-tight mt-2 text-center">
             👑 Top winner tiket 👑
           </h3>
-          <TiketCardComponent item={victory} isPublic={true} />
+          <TiketCardComponent tiket={victory} isPublic={true} />
         </div>
         <div className="grid justify-center gap-2">
           <h3 className="scroll-m-20 text-xl font-semibold tracking-tight mt-2 text-center">
             👑 Top looser tiket 👑
           </h3>
-          <TiketCardComponent item={defeat} isPublic={true} />
+          <TiketCardComponent tiket={defeat} isPublic={true} />
         </div>
       </div>
     </div>

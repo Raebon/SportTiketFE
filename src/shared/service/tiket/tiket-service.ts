@@ -1,6 +1,13 @@
 import { AxiosResponse } from 'axios';
 import api from '../../lib/auth-interceptors';
-import { CreateTiketDto, TTiket, UpdateStatusTiket, UpdateTiketDto } from './interfaces';
+import {
+  CreateTiket,
+  CreateTiketDto,
+  TTiket,
+  UpdateTiket,
+  UpdateTiketDto,
+  UpdateTiketStatus
+} from './interfaces';
 
 export class TiketService {
   public async getList() {
@@ -12,9 +19,10 @@ export class TiketService {
     }
   }
 
-  public async create(body: CreateTiketDto) {
+  public async create(body: CreateTiket) {
     try {
-      return await api.post('/tiket/create', body);
+      const request = new CreateTiketDto(body);
+      return await api.post('/tiket/create', request);
     } catch (error) {
       throw error;
     }
@@ -30,7 +38,15 @@ export class TiketService {
     } catch (error) {}
   }
 
-  public async updateStatus(body: UpdateStatusTiket) {
+  public async update(body: UpdateTiket) {
+    try {
+      const request = new UpdateTiketDto(body);
+      return await api.post('/tiket/update', request);
+    } catch (error) {
+      throw error;
+    }
+  }
+  public async updateStatus(body: UpdateTiketStatus) {
     try {
       const request = new UpdateTiketDto(body);
       return await api.post('/tiket/update-status', request);

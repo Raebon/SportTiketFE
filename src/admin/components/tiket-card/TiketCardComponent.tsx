@@ -1,7 +1,5 @@
-import { Eye } from 'lucide-react';
 import { FC } from 'react';
 import { Badge } from '../../../shared/components/ui/badge';
-import { Button } from '../../../shared/components/ui/button';
 import {
   Card,
   CardContent,
@@ -11,11 +9,12 @@ import {
   CardTitle
 } from '../../../shared/components/ui/card';
 import { Separator } from '../../../shared/components/ui/separator';
+import { formatNumber } from '../../../shared/lib/utils';
 import { TTiket, TiketStatusEnum } from '../../../shared/service/tiket/interfaces';
 import { CheckTiketButton } from './CheckTiketButton';
 import { DeleteTiketButton } from './DeleteTiketButton';
+import {EditTiketButton} from './EditTiketButton';
 import { getStatusText } from './utils';
-import { formatNumber } from '../../../shared/lib/utils';
 
 interface TiketCardComponentProps {
   tiket: TTiket;
@@ -84,9 +83,7 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ tiket, isPubli
         <CardFooter className="flex justify-end space-x-1">
           <DeleteTiketButton id={tiket.id} name={tiket.name} />
           <CheckTiketButton tiket={tiket} disabled={canCheckTiket(tiket.approximateEndDatetime)} />
-          <Button type="button" variant={'default'} size={'icon'} disabled>
-            <Eye />
-          </Button>
+          <EditTiketButton tiket={tiket} disabled={tiket.status !== TiketStatusEnum.notEvaluated}/>
         </CardFooter>
       )}
     </Card>
