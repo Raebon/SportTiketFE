@@ -14,7 +14,11 @@ import {
 import { Input } from '../../../shared/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '../../../shared/components/ui/radio-group';
 import { TiketStatuses } from '../../../shared/constants';
-import { TiketStatusType, UpdateStatusTiket } from '../../../shared/service/tiket/interfaces';
+import {
+  TTiket,
+  TiketStatusType,
+  UpdateStatusTiket
+} from '../../../shared/service/tiket/interfaces';
 import { useUpdateStatusTiketMutation } from '../../api/mutations/tiket/useUpdateStatusTiket';
 import { getStatusText } from './utils';
 
@@ -31,89 +35,100 @@ const FormSchema = z.object({
 });
 
 interface CheckTiketFormProps {
-  id: string;
-  status: TiketStatusType;
+  tiket: TTiket;
   closePopover(e: boolean): void;
 }
 
-export const CheckTiketForm: FC<CheckTiketFormProps> = ({ id, status, closePopover }) => {
+export const CheckTiketForm: FC<CheckTiketFormProps> = ({ closePopover, tiket }) => {
   const updateStatus = useUpdateStatusTiketMutation();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      type: status,
-      cashoutMoney: "0"
+      type: tiket.status,
+      cashoutMoney: '0'
     }
   });
 
+  const cashoutMoneyWatch = form.watch('cashoutMoney');
+
+  const isCashoutValid = () => {
+    const cashoutMoneyToNumber = Number(cashoutMoneyWatch);
+    return cashoutMoneyToNumber <= tiket.bet * tiket.rate;
+  };
+
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     const updatedTiket: UpdateStatusTiket = {
-      id:id,
+      id: tiket.id,
       status: data.type as TiketStatusType,
+      bet: tiket.bet,
+      rate: tiket.rate,
       cashoutMoney: Number(data.cashoutMoney)
-    }
-    updateStatus.mutate(
-      updatedTiket,
-      {
-        onSuccess: () => {
-          closePopover(true);
-        }
+    };
+    updateStatus.mutate(updatedTiket, {
+      onSuccess: () => {
+        closePopover(true);
       }
-    );
+    });
   };
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-6">
         <div className="space-y-3">
-        <FormField
-          control={form.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Vyber stav tiketu</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-col space-y-1"
-                  >
-                  {TiketStatuses.map((item, index) => {
-                    return (
-                      <FormItem className="flex items-center space-x-3 space-y-0" key={index}>
-                        <FormControl>
-                          <RadioGroupItem value={item} />
-                        </FormControl>
-                        <FormLabel className="font-normal">{getStatusText(item)}</FormLabel>
-                      </FormItem>
-                    );
-                  })}
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {form.watch("type") ===  "cashout" && (
           <FormField
-          
-          control={form.control}
-          name="cashoutMoney"
-          render={({ field }) => (
-            <FormItem className='m-0 space-y-0'>
-              <FormControl >
-                <Input  type="number" placeholder="Zadejte částku..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+            control={form.control}
+            name="type"
+            render={({ field }) => (
+              <FormItem className="space-y-3">
+                <FormLabel>Vyber stav tiketu</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="flex flex-col space-y-1"
+                  >
+                    {TiketStatuses.map((item, index) => {
+                      return (
+                        <FormItem className="flex items-center space-x-3 space-y-0" key={index}>
+                          <FormControl>
+                            <RadioGroupItem value={item} />
+                          </FormControl>
+                          <FormLabel className="font-normal">{getStatusText(item)}</FormLabel>
+                        </FormItem>
+                      );
+                    })}
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
+          {form.watch('type') === 'cashout' && (
+            <FormField
+              control={form.control}
+              name="cashoutMoney"
+              render={({ field }) => (
+                <FormItem className="m-0 space-y-0">
+                  <FormControl>
+                    <Input type="number" placeholder="Zadejte částku..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                  <div className="h-[48px] mt-2">
+                    {!isCashoutValid() && (
+                      <p className="text-sm font-medium text-destructive">
+                        Nelze cashnout více než je možná výhra tiketu
+                      </p>
+                    )}
+                  </div>
+                </FormItem>
+              )}
+            />
           )}
-          </div>
-          <div className='flex justify-end'>
-        <Button variant="default" type="submit">
-          Vyhodnotit
-        </Button>
-          </div>
+        </div>
+        <div className="flex justify-end">
+          <Button variant="default" type="submit" disabled={!isCashoutValid()}>
+            Vyhodnotit
+          </Button>
+        </div>
       </form>
     </Form>
   );

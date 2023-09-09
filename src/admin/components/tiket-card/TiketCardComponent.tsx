@@ -18,11 +18,11 @@ import { getStatusText } from './utils';
 import { formatNumber } from '../../../shared/lib/utils';
 
 interface TiketCardComponentProps {
-  item: TTiket;
+  tiket: TTiket;
   isPublic: boolean;
 }
 
-export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item, isPublic }) => {
+export const TiketCardComponent: FC<TiketCardComponentProps> = ({ tiket, isPublic }) => {
   const getStatusVariant = (status: string) => {
     switch (status) {
       case 'not-evaluated':
@@ -45,49 +45,45 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ item, isPublic
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{item.name}</CardTitle>
+        <CardTitle>{tiket.name}</CardTitle>
         <Separator />
         <CardDescription>
-          <Badge variant={getStatusVariant(item.status)}>{getStatusText(item.status)}</Badge>
+          <Badge variant={getStatusVariant(tiket.status)}>{getStatusText(tiket.status)}</Badge>
         </CardDescription>
       </CardHeader>
       <CardContent className="font-bold">
         <div className="grid grid-cols-2 gap-2 text-sm min-w-[225px]">
           <p className="text-gray-400">Celkový kurz:</p>
-          <p className="text-end">{item.rate}</p>
+          <p className="text-end">{tiket.rate}</p>
           <p className="text-gray-400">Vklad:</p>
-          <p className="text-end">{formatNumber(item.bet)}</p>
+          <p className="text-end">{formatNumber(tiket.bet)}</p>
           <p className="text-gray-400">Možná výhra:</p>
           <p className="text-end ">
-            {item.status === TiketStatusEnum.cashout ? (
+            {tiket.status === TiketStatusEnum.cashout ? (
               <>
                 <>
                   <small className="opacity-70 pr-2 line-through">
-                    {formatNumber(Math.ceil(item.rate * item.bet * 100) / 100)}
+                    {formatNumber(Math.ceil(tiket.rate * tiket.bet * 100) / 100)}
                   </small>
-                  {formatNumber(item.cashoutMoney)}
+                  {formatNumber(tiket.cashoutMoney)}
                 </>
               </>
             ) : (
-              <>{formatNumber(Math.ceil(item.rate * item.bet * 100) / 100)}</>
+              <>{formatNumber(Math.ceil(tiket.rate * tiket.bet * 100) / 100)}</>
             )}
           </p>
           {isPublic && (
             <>
               <p className="text-gray-400">Hráč</p>
-              <p className="text-end">{item.userName}</p>
+              <p className="text-end">{tiket.userName}</p>
             </>
           )}
         </div>
       </CardContent>
       {!isPublic && (
         <CardFooter className="flex justify-end space-x-1">
-          <DeleteTiketButton id={item.id} name={item.name} />
-          <CheckTiketButton
-            id={item.id}
-            status={item.status}
-            disabled={canCheckTiket(item.approximateEndDatetime)}
-          />
+          <DeleteTiketButton id={tiket.id} name={tiket.name} />
+          <CheckTiketButton tiket={tiket} disabled={canCheckTiket(tiket.approximateEndDatetime)} />
           <Button type="button" variant={'default'} size={'icon'} disabled>
             <Eye />
           </Button>

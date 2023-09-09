@@ -37,8 +37,13 @@ export class CreateTiketDto {
 
 export interface UpdateStatusTiket {
   id: string;
-  status: TiketStatusType;
+  userName?: string;
+  name?: string;
+  bet?: number;
+  rate?: number;
   cashoutMoney?: number;
+  approximateEndDatetime?: Date;
+  status?: TiketStatusType;
 }
 
 export class UpdateTiketDto {

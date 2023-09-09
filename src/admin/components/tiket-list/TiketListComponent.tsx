@@ -13,8 +13,8 @@ export const TiketListComponent: FC<TiketListComponentProps> = ({}) => {
   return (
     <div className="grid md:grid-cols-3 gap-5 sm:grid-cols-2">
       {data &&
-        data.data.map((item: any, index: any) => (
-          <TiketCardComponent key={index} item={item} isPublic={false} />
+        data.data.map((item, index) => (
+          <TiketCardComponent key={index} tiket={item} isPublic={false} />
         ))}
     </div>
   );
