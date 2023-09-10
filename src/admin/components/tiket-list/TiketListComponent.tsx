@@ -16,7 +16,7 @@ export const TiketListComponent: FC<TiketListComponentProps> = ({ filters }) => 
     return <AlertInfoMessage text="Neexistuje záznam, který by odpovídal zadanému filtru" />;
 
   return (
-    <div>
+    <div className="mb-5">
       {isLoading && <LoadingBackground />}
       <div className="grid md:grid-cols-3 gap-5 sm:grid-cols-2">
         {data.data.map((item, index) => (

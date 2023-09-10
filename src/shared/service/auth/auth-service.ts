@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import api from '../../lib/auth-interceptors';
+import api from '../../lib/api-interceptors';
 import { service } from '../service';
 import { ICreateUser } from './interfaces';
 
@@ -29,6 +29,7 @@ export class AuthService {
   async isEmailValid(email: string) {
     try {
       const response: AxiosResponse<any> = await api.get(`/auth/is-email-valid`, {
+        withCredentials: true,
         params: { email: email }
       });
       console.log(response.data);
@@ -41,6 +42,7 @@ export class AuthService {
   async isUserNameValid(userName: string) {
     try {
       const response: AxiosResponse<any> = await api.get(`/auth/is-username-valid`, {
+        withCredentials: true,
         params: { userName: userName }
       });
       console.log(response.data);
