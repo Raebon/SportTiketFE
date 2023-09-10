@@ -4,15 +4,19 @@ import {
   CreateTiket,
   CreateTiketDto,
   TTiket,
+  TiketFilter,
+  TiketStatusType,
   UpdateTiket,
   UpdateTiketDto,
   UpdateTiketStatus
 } from './interfaces';
 
 export class TiketService {
-  public async getList() {
+  public async getList(body: TiketFilter) {
     try {
-      const response: AxiosResponse<Array<TTiket>> = await api.get(`/tiket/user-tikets`);
+      const response: AxiosResponse<Array<TTiket>> = await api.get(`/tiket/user-tikets`, {
+        params: body
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -28,14 +32,18 @@ export class TiketService {
     }
   }
 
-  public async delete(tiketId: string) {
+  public async delete(tiketId: string, bet: number, status: TiketStatusType) {
     try {
       return await api.delete('/tiket/delete', {
         data: {
-          tiketId: tiketId
+          tiketId: tiketId,
+          bet: bet,
+          status: status
         }
       });
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async update(body: UpdateTiket) {

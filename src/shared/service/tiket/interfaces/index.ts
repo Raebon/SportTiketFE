@@ -59,6 +59,12 @@ export interface UpdateTiketStatus {
   status?: TiketStatusType;
 }
 
+export interface DeleteTiket {
+  tiketId: string;
+  bet: number;
+  status: TiketStatusType;
+}
+
 export class UpdateTiketDto {
   public id: string;
   public name?: string;
@@ -76,4 +82,8 @@ export class UpdateTiketDto {
     this.approximateEndDatetime = data.approximateEndDatetime;
     this.status = data.status;
   }
+}
+
+export interface TiketFilter {
+  search?: string;
 }

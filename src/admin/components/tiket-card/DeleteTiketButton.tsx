@@ -1,5 +1,5 @@
 import { XOctagon } from 'lucide-react';
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,16 +13,26 @@ import {
 } from '../../../shared/components/ui/alert-dialog';
 import { buttonVariants } from '../../../shared/components/ui/button';
 import { useDeleteTiketMutation } from '../../api/mutations/tiket/useDeleteTiket';
+import { DeleteTiket, TiketStatusType } from '../../../shared/service/tiket/interfaces';
+import { FiltersContext } from '../../pages/tiket-management/TiketManagement';
 
 interface DeleteTiketButtonProps {
   id: string;
   name: string;
+  bet: number;
+  status: TiketStatusType;
 }
 
-export const DeleteTiketButton: FC<DeleteTiketButtonProps> = ({ id, name }) => {
-  const deleteTiket = useDeleteTiketMutation();
+export const DeleteTiketButton: FC<DeleteTiketButtonProps> = ({ id, name, bet, status }) => {
+  const filters = useContext(FiltersContext);
+  const deleteTiket = useDeleteTiketMutation(filters);
   const onConfirm = () => {
-    deleteTiket.mutate(id);
+    const payload: DeleteTiket = {
+      tiketId: id,
+      bet: bet,
+      status: status
+    };
+    deleteTiket.mutate(payload);
   };
   return (
     <AlertDialog>

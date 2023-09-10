@@ -13,7 +13,8 @@ import { formatNumber } from '../../../shared/lib/utils';
 import { TTiket, TiketStatusEnum } from '../../../shared/service/tiket/interfaces';
 import { CheckTiketButton } from './CheckTiketButton';
 import { DeleteTiketButton } from './DeleteTiketButton';
-import {EditTiketButton} from './EditTiketButton';
+import { EditTiketButton } from './EditTiketButton';
+import { EvaluatedTiketMark } from './EvaluatedTiketMark';
 import { getStatusText } from './utils';
 
 interface TiketCardComponentProps {
@@ -37,9 +38,11 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ tiket, isPubli
     }
   };
 
-  const canCheckTiket = (aproximateEndDatetime: Date): boolean => {
-    let dateNow = new Date();
-    return Number(aproximateEndDatetime) >= Number(dateNow);
+  const canCheckTiket = (): boolean => {
+    const dateNow = new Date();
+    const endDateTime = new Date(tiket.approximateEndDatetime);
+    const isNotEvaluatedStatus = tiket.status === TiketStatusEnum.notEvaluated;
+    return Number(endDateTime) >= Number(dateNow) || !isNotEvaluatedStatus;
   };
   return (
     <Card>
@@ -81,9 +84,23 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ tiket, isPubli
       </CardContent>
       {!isPublic && (
         <CardFooter className="flex justify-end space-x-1">
-          <DeleteTiketButton id={tiket.id} name={tiket.name} />
-          <CheckTiketButton tiket={tiket} disabled={canCheckTiket(tiket.approximateEndDatetime)} />
-          <EditTiketButton tiket={tiket} disabled={tiket.status !== TiketStatusEnum.notEvaluated}/>
+          {tiket.status === TiketStatusEnum.notEvaluated ? (
+            <>
+              <DeleteTiketButton
+                id={tiket.id}
+                name={tiket.name}
+                bet={tiket.bet}
+                status={tiket.status}
+              />
+              <CheckTiketButton tiket={tiket} disabled={canCheckTiket()} />
+              <EditTiketButton
+                tiket={tiket}
+                disabled={tiket.status !== TiketStatusEnum.notEvaluated}
+              />
+            </>
+          ) : (
+            <EvaluatedTiketMark />
+          )}
         </CardFooter>
       )}
     </Card>

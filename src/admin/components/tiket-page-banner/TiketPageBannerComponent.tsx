@@ -1,12 +1,16 @@
 import { FC } from 'react';
-import CreateTiketButton from './CreateTiketButton';
 import { PageBanner } from '../../../shared/components/PageBanner';
+import { SearchBar } from '../../../shared/components/SearchBar';
+import CreateTiketButton from './CreateTiketButton';
 
-interface TiketPageBannerComponentProps {}
+interface TiketPageBannerComponentProps {
+  handleSearch(e: string): void;
+}
 
-const TiketPageBannerComponent: FC<TiketPageBannerComponentProps> = ({}) => {
+const TiketPageBannerComponent: FC<TiketPageBannerComponentProps> = ({ handleSearch }) => {
   return (
     <PageBanner title="Správa tiketů">
+      <SearchBar onEnter={handleSearch} />
       <CreateTiketButton />
     </PageBanner>
   );

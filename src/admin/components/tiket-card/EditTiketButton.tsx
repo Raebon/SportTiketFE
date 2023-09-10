@@ -29,7 +29,7 @@ export const EditTiketButton: FC<EditTiketButtonProps> = ({ tiket, disabled }) =
         <Pencil />
       </SheetTrigger>
       <SheetContent>
-      <SheetHeader>
+        <SheetHeader>
           <SheetTitle>Editovat tiket</SheetTitle>
           <SheetDescription>Vyplňte formulář a stiskněte tlačítko "Vytvořit"</SheetDescription>
         </SheetHeader>

@@ -18,6 +18,7 @@ import { SheetClose, SheetFooter } from '../../../shared/components/ui/sheet';
 import { TiketStatusEnum } from '../../../shared/enums';
 import { CreateTiket, TTiket, UpdateTiket } from '../../../shared/service/tiket/interfaces';
 import { useUserWalletQuery } from '../../api/queries/user/getUserWalletQuery';
+import { formatNumber } from '../../../shared/lib/utils';
 
 const formSchema = z.object({
   name: z.string().min(3).max(50),
@@ -34,9 +35,15 @@ interface TiketFormProps {
   onSubmitClick(e: CreateTiket | UpdateTiket): void;
   actionButtonName?: string;
   tiket?: TTiket;
+  disabledBetInput?: boolean;
 }
 
-export const TiketForm: FC<TiketFormProps> = ({ onSubmitClick, actionButtonName, tiket }) => {
+export const TiketForm: FC<TiketFormProps> = ({
+  onSubmitClick,
+  actionButtonName,
+  tiket,
+  disabledBetInput
+}) => {
   const [approximateEndDateTime, setApproximateEndDateTime] = useState<Date>(
     tiket ? new Date(tiket.approximateEndDatetime) : new Date()
   );
@@ -103,16 +110,23 @@ export const TiketForm: FC<TiketFormProps> = ({ onSubmitClick, actionButtonName,
           name="bet"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Vsadit částku</FormLabel>
+              <FormLabel>{disabledBetInput ? 'Vsazená částka' : 'Vsadit částku'}</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="začněte psát..." {...field} />
+                <Input
+                  type="number"
+                  placeholder="začněte psát..."
+                  {...field}
+                  disabled={disabledBetInput}
+                />
               </FormControl>
               <FormMessage />
               <FormDescription>
                 <small>
                   zůstatek na účtu:{' '}
                   <span className="font-medium">
-                    {(data?.data.balance! - Number(field.value)).toFixed(2)}Kč
+                    {disabledBetInput
+                      ? formatNumber(data?.data.balance!)
+                      : formatNumber(data?.data.balance! - Number(field.value))}
                   </span>
                 </small>
               </FormDescription>

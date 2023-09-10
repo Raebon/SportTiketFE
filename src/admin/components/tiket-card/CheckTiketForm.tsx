@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import * as z from 'zod';
 import { Button } from '../../../shared/components/ui/button';
 import {
@@ -21,6 +21,7 @@ import {
 } from '../../../shared/service/tiket/interfaces';
 import { useUpdateStatusTiketMutation } from '../../api/mutations/tiket/useUpdateStatusTiket';
 import { getStatusText } from './utils';
+import { FiltersContext } from '../../pages/tiket-management/TiketManagement';
 
 const FormSchema = z.object({
   type: z.enum(['not-evaluated', 'victory', 'defeat', 'cashout'], {
@@ -40,7 +41,8 @@ interface CheckTiketFormProps {
 }
 
 export const CheckTiketForm: FC<CheckTiketFormProps> = ({ closePopover, tiket }) => {
-  const updateStatus = useUpdateStatusTiketMutation();
+  const filters = useContext(FiltersContext);
+  const updateStatus = useUpdateStatusTiketMutation(filters);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
