@@ -29,7 +29,6 @@ export class AuthService {
   async isEmailValid(email: string) {
     try {
       const response: AxiosResponse<any> = await api.get(`/auth/is-email-valid`, {
-        withCredentials: true,
         params: { email: email }
       });
       console.log(response.data);
@@ -42,7 +41,6 @@ export class AuthService {
   async isUserNameValid(userName: string) {
     try {
       const response: AxiosResponse<any> = await api.get(`/auth/is-username-valid`, {
-        withCredentials: true,
         params: { userName: userName }
       });
       console.log(response.data);

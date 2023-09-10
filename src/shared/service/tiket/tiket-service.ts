@@ -15,7 +15,6 @@ export class TiketService {
   public async getList(body: TiketFilter) {
     try {
       const response: AxiosResponse<Array<TTiket>> = await api.get(`/tiket/user-tikets`, {
-        withCredentials: true,
         params: body
       });
       return response.data;

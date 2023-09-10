@@ -5,7 +5,6 @@ export class LogService {
   public async getWalletLogs(walletId: string) {
     try {
       const response: AxiosResponse<Array<IWalletLog>> = await api.get(`/log/wallet`, {
-        withCredentials: true,
         params: { walletId: walletId }
       });
       return response.data;
