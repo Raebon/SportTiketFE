@@ -36,7 +36,7 @@ export class CreateTiketDto {
   constructor(data: any) {
     this.userId = data.userId;
     this.name = data.name;
-    this.bet = data.bet;
+    this.bet = data.bet.toFixed(2);
     this.rate = data.rate;
     this.approximateEndDatetime = data.approximateEndDatetime;
     this.status = data.status;
@@ -76,9 +76,9 @@ export class UpdateTiketDto {
   constructor(data: any) {
     this.id = data.id;
     this.name = data.name;
-    this.bet = data.bet;
+    this.bet = data.bet.toFixed(2);
     this.rate = data.rate;
-    this.cashoutMoney = data.cashoutMoney;
+    this.cashoutMoney = data.cashoutMoney.toFixed(2);
     this.approximateEndDatetime = data.approximateEndDatetime;
     this.status = data.status;
   }

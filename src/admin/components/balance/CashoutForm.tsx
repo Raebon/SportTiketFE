@@ -37,7 +37,7 @@ const CashoutForm: FC<CashoutFormProps> = ({ walletId }) => {
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const payload: IBalanceUpdateRequest = {
       id: walletId,
-      amount: -Number(values.amount),
+      amount: Number(values.amount),
       type: WalletLogEnum.withdraw
     };
     cashout.mutate(payload, {

@@ -14,7 +14,7 @@ export class UserService {
 
   public async getUserWalletDetail() {
     try {
-      const response: AxiosResponse<IWallet> = await api.get(`/user/wallet`, {});
+      const response: AxiosResponse<IWallet> = await api.get(`/user/wallet`);
       return response.data;
     } catch (error) {
       throw error;

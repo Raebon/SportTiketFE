@@ -3,6 +3,7 @@ import { DropdownMenuLabel } from '../../../shared/components/ui/dropdown-menu';
 import { Button } from '../../../shared/components/ui/button';
 import { useUserWalletQuery } from '../../../admin/api/queries/user/getUserWalletQuery';
 import { useNavigate } from 'react-router-dom';
+import { formatNumber } from '../../../shared/lib/utils';
 
 interface WalletInfoProps {
   closeDropdownMenu(e: boolean): void;
@@ -25,11 +26,11 @@ export const WalletInfo: FC<WalletInfoProps> = ({ closeDropdownMenu }) => {
     <DropdownMenuLabel className="grid gap-3 text-xs">
       <div className="flex justify-between">
         <p className="text-gray-500">Stav účtu:</p>
-        <span>{data?.data.balance} Kč</span>
+        <span>{formatNumber(data?.data.balance ?? 0)}</span>
       </div>
       <div className="flex justify-between">
         <p className="text-gray-500">Vsazeno:</p>
-        <span>{data?.data.currentBet} Kč</span>
+        <span>{formatNumber(data?.data.currentBet ?? 0)}</span>
       </div>
       <div className="flex justify-between gap-2">
         <Button onClick={redirectToDeposit}>Vložit peníze</Button>

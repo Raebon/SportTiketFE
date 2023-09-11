@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const formatNumber = (val: number) => {
   if (!val) {
-    return null;
+    return '0.00 Kč';
   }
   return val.toLocaleString('cs-CZ', {
     style: 'currency',

@@ -1,5 +1,7 @@
+import DaschboardOverviewComponent from "../../components/dashboard-overview/DaschboardOverviewComponent";
+
 const DashboardPage = () => {
-  return <div>DashboardPage</div>;
+  return <DaschboardOverviewComponent />;
 };
 
 export default DashboardPage;

@@ -5,6 +5,6 @@ export interface IWalletLog {
   walletId: string;
   type: WalletLogEnum;
   currentBalance: number;
-  updatedBalance: number;
+  amount: number;
   createdAt: Date;
 }

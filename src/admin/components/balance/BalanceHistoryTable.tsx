@@ -11,6 +11,7 @@ import {
 import { IWalletLog } from '../../../shared/service/log/interfaces';
 import { formatDatetime } from '../../../shared/lib/datetime-format';
 import { WalletLogEnum } from '../../../shared/enums';
+import { formatNumber } from '../../../shared/lib/utils';
 
 interface BalanceHistoryTableProps {
   data: Array<IWalletLog>;
@@ -19,7 +20,8 @@ interface BalanceHistoryTableProps {
 const translatedTypes = new Map([
   [WalletLogEnum.deposit, 'Vklad na účet'],
   [WalletLogEnum.bet, 'Vsazená částka'],
-  [WalletLogEnum.withdraw, 'Výplata'],
+  [WalletLogEnum.withdraw, 'Výběr'],
+  [WalletLogEnum.canceled, 'Zrušený tiket'],
   [WalletLogEnum.win, 'Výhra']
 ]);
 
@@ -46,8 +48,8 @@ export const BalanceHistoryTable: FC<BalanceHistoryTableProps> = ({ data }) => {
               <TableCell>{formatDatetime(item.createdAt)}</TableCell>
               <TableCell className="font-medium">{item.id}</TableCell>
               <TableCell>{getTransactionType(item.type)}</TableCell>
-              <TableCell>{item.updatedBalance - item.currentBalance} Kč</TableCell>
-              <TableCell className="text-right">{item.updatedBalance}</TableCell>
+              <TableCell>{formatNumber(item.amount)}</TableCell>
+              <TableCell className="text-right">{formatNumber(item.currentBalance + item.amount)}</TableCell>
             </TableRow>
           );
         })}

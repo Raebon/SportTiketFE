@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle
 } from '../../../shared/components/ui/card';
+import { formatNumber } from '../../../shared/lib/utils';
 
 interface MyAccountCardHeaderProps {
   children: ReactNode | ReactNode[];
@@ -29,7 +30,7 @@ export const MyAccountCard: FC<MyAccountCardHeaderProps> = ({
           <span>{title}</span>
           <p className="text-sm">
             <small className="text-gray-500">Aktuální zůstatek: </small>
-            {balance} Kč
+            {formatNumber(balance)}
           </p>
         </CardTitle>
         <CardDescription>{description}</CardDescription>

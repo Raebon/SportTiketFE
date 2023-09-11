@@ -11,5 +11,6 @@ export enum WalletLogEnum {
   deposit = 'deposit', //Vklad na účet
   withdraw = 'withdraw', //Výplata
   bet = 'bet', //Vsazená částka
-  win = 'win' //Výhra
+  win = 'win', //Výhra
+  canceled = 'canceled' //Zrušený tiket
 }
