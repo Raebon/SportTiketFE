@@ -14,7 +14,7 @@ import {
   useForm
 } from '../../../shared/components/ui/form';
 import { Input } from '../../../shared/components/ui/input';
-import { ArbitrageData, ArbitrageLinksParams, ArbitrageResult } from '../../../shared/service/arbitrage/interfaces';
+import { ArbitrageData, ArbitrageLinksParams } from '../../../shared/service/arbitrage/interfaces';
 import { service } from '../../../shared/service/service';
 import { selectData } from './select-data';
 import { Switch } from '../../../shared/components/ui/switch';
