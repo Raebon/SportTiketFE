@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
 import { ArbitrageData, ArbitrageLinksParams } from './interfaces';
 
-const BASE_URL = 'http://localhost:4000/';
-//const BASE_URL = import.meta.env.VITE_ARBITRAGE_API_URL;
+//const BASE_URL = 'http://localhost:4000/';
+const BASE_URL = import.meta.env.VITE_ARBITRAGE_API_URL;
 
 export class ArbitrageService {
   public async getFootbal(params: ArbitrageLinksParams) {
