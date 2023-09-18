@@ -46,9 +46,8 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
     const payload: ArbitrageLinksParams = values;
     payload.newEvaluation = newEvaluation
     setLoading(true);
-    fetchAllOptions()
     let aData: ArbitrageData;
-  /*   service.arbitrage
+    service.arbitrage
       .getFootbal(payload)
       .then((data) => {
         aData = data;
@@ -57,10 +56,10 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
         onSubmitClick(aData);
 
         setLoading(false);
-      }); */
+      });
   };
 
-  const fetchAllOptions = async () => {
+/*   const fetchAllOptions = async () => {
     let newData:ArbitrageResult[][] = []
     for(let i =0; i < selectData.length; i++){
       const payload: ArbitrageLinksParams ={
@@ -79,7 +78,7 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
       })
     }
     console.log(newData)
-  };
+  }; */
 
   const onSelectChange = (e: string) => {
     const selectedItem = selectData.filter((item) => item.value === e);
