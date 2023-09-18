@@ -44,7 +44,7 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const payload: ArbitrageLinksParams = values;
-    payload.newEvaluation = newEvaluation
+    payload.newEvaluation = newEvaluation;
     setLoading(true);
     let aData: ArbitrageData;
     service.arbitrage
@@ -59,7 +59,7 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
       });
   };
 
-/*   const fetchAllOptions = async () => {
+  /*   const fetchAllOptions = async () => {
     let newData:ArbitrageResult[][] = []
     for(let i =0; i < selectData.length; i++){
       const payload: ArbitrageLinksParams ={
