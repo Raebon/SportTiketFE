@@ -8,6 +8,7 @@ const SignUp = React.lazy(() => import('../landing/pages/sign-up/SignUp'));
 
 const Admin = React.lazy(() => import('../admin/admin'));
 const DashboardPage = React.lazy(() => import('../admin/pages/dashboard/DashboardPage'));
+const ArbitragePage = React.lazy(() => import('../admin/pages/arbitrage/Arbitrage'));
 const Profile = React.lazy(() => import('../admin/pages/profile/Profile'));
 const TiketManagement = React.lazy(() => import('../admin/pages/tiket-management/TiketManagement'));
 
@@ -39,6 +40,7 @@ export const RoutesComponent = () => {
           >
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="tiket-management" element={<TiketManagement />} />
+            <Route path="arbitrage" element={<ArbitragePage />} />
             <Route path="my-account" element={<MyAccount />}>
               <Route path="profile" element={<Profile />} />
               <Route path="settings" element={<Settings />} />

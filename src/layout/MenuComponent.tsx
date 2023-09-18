@@ -14,12 +14,15 @@ const menuItems: Array<IMenuItems> = [
 const privateItems: Array<IMenuItems> = [
   {
     label: 'Dashboard',
-    path: '/dashboard',
-    disabled: true
+    path: '/dashboard'
   },
   {
     label: 'Správa tiketů',
     path: '/tiket-management'
+  },
+  {
+    label: 'Vyhledat Arbitrážní Sázky',
+    path: '/arbitrage'
   }
 ];
 

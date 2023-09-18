@@ -22,7 +22,8 @@ const translatedTypes = new Map([
   [WalletLogEnum.bet, 'Vsazená částka'],
   [WalletLogEnum.withdraw, 'Výběr'],
   [WalletLogEnum.canceled, 'Zrušený tiket'],
-  [WalletLogEnum.win, 'Výhra']
+  [WalletLogEnum.win, 'Výhra'],
+  [WalletLogEnum.defeat, 'Prohra']
 ]);
 
 export const BalanceHistoryTable: FC<BalanceHistoryTableProps> = ({ data }) => {
@@ -42,14 +43,16 @@ export const BalanceHistoryTable: FC<BalanceHistoryTableProps> = ({ data }) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((item, index) => {
+        {data?.map((item, index) => {
           return (
             <TableRow key={index}>
               <TableCell>{formatDatetime(item.createdAt)}</TableCell>
               <TableCell className="font-medium">{item.id}</TableCell>
               <TableCell>{getTransactionType(item.type)}</TableCell>
               <TableCell>{formatNumber(item.amount)}</TableCell>
-              <TableCell className="text-right">{formatNumber(item.currentBalance + item.amount)}</TableCell>
+              <TableCell className="text-right">
+                {formatNumber(item.currentBalance + item.amount)}
+              </TableCell>
             </TableRow>
           );
         })}

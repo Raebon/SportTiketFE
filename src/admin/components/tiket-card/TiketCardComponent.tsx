@@ -16,6 +16,7 @@ import { DeleteTiketButton } from './DeleteTiketButton';
 import { EditTiketButton } from './EditTiketButton';
 import { EvaluatedTiketMark } from './EvaluatedTiketMark';
 import { getStatusText } from './utils';
+import { calculateRelativeTimeDifference } from '../../../shared/lib/datetime-format';
 
 interface TiketCardComponentProps {
   tiket: TTiket;
@@ -73,6 +74,10 @@ export const TiketCardComponent: FC<TiketCardComponentProps> = ({ tiket, isPubli
             ) : (
               <>{formatNumber(Math.ceil(tiket.rate * tiket.bet * 100) / 100)}</>
             )}
+          </p>
+          <p className="text-gray-400">Přibližný konec:</p>
+          <p className="text-end">
+            {calculateRelativeTimeDifference(tiket.approximateEndDatetime)}
           </p>
           {isPublic && (
             <>

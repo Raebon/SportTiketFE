@@ -8,3 +8,9 @@ export interface IWalletLog {
   amount: number;
   createdAt: Date;
 }
+
+export interface StatisticsResponse {
+  depositTotal: number;
+  withdrawTotal: number;
+  earnings: number;
+}

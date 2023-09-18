@@ -16,7 +16,7 @@ export const BalanceHistoryComponents: FC<BalanceHistoryComponentsProps> = ({ wa
       description="Výpis historie všech výběru i vkladů"
       balance={wallet.balance}
     >
-      <BalanceHistoryTable data={data?.data!} />
+      <BalanceHistoryTable data={data?.data} />
     </MyAccountCard>
   );
 };

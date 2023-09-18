@@ -1,3 +1,4 @@
+import { ArbitrageService } from './arbitrage/arbitrage-service';
 import { AuthService } from './auth/auth-service';
 import { LogService } from './log/log-service';
 import { NotificationService } from './notification/notification-service';
@@ -12,6 +13,7 @@ class Service {
   private _token;
   private _user;
   private _log;
+  private _arbitrage;
   constructor() {
     this._auth = new AuthService();
     this._tiket = new TiketService();
@@ -19,6 +21,7 @@ class Service {
     this._token = new TokenService();
     this._user = new UserService();
     this._log = new LogService();
+    this._arbitrage = new ArbitrageService();
   }
   get auth(): AuthService {
     return this._auth;
@@ -42,6 +45,9 @@ class Service {
 
   get user(): UserService {
     return this._user;
+  }
+  get arbitrage(): ArbitrageService {
+    return this._arbitrage;
   }
 }
 
