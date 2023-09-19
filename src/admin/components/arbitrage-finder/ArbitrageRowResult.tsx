@@ -10,7 +10,7 @@ interface ArbitrageRowResultProps {
   links: string[];
 }
 
-export const ArbitrageRowResult: FC<ArbitrageRowResultProps> = ({ data, links }) => {
+export const ArbitrageRowResult: FC<ArbitrageRowResultProps> = ({ data, links,  }) => {
   const getLink = (site: string): string => {
     const urls = links;
     const keyword = site;
@@ -44,10 +44,10 @@ export const ArbitrageRowResult: FC<ArbitrageRowResultProps> = ({ data, links })
                   <span className="font-semibold">Profit v kč: </span>
                   {formatNumber(item.profit)}
                 </p>
-                <p className="text-xs text-muted-foreground">
+               {/*  <p className="text-xs text-muted-foreground">
                   <span className="font-semibold">Profit v %: </span>
-                  {(item.profit / item.amount).toFixed(2)}
-                </p>
+                  {(item.profit /desiredBet).toFixed(2)}
+                </p> */}
                 <p className="text-xs text-muted-foreground">
                   <span className="font-semibold">Kurz: </span>
                   {item.rate}

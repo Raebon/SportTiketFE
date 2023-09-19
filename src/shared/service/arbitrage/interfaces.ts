@@ -2,6 +2,7 @@ export interface ArbitrageLinksParams {
   tipsport: string | undefined;
   fortuna: string | undefined;
   newEvaluation?: boolean;
+  desiredBet: number;
 }
 
 export interface ArbitrageData {

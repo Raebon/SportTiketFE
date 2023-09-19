@@ -18,6 +18,7 @@ export const ArbitrageFinder: FC<ArbitrageFinderProps> = ({}) => {
   const onTennisSearch = (e: ArbitrageData | undefined) => {
     setTennisData(e);
   };
+
   return (
     <>
       <PageBanner title="Vyhledat Arbitrážní Sázky"></PageBanner>

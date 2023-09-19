@@ -13,12 +13,15 @@ import {
   useForm
 } from '../../../shared/components/ui/form';
 import { Input } from '../../../shared/components/ui/input';
-import { ArbitrageData } from '../../../shared/service/arbitrage/interfaces';
+import { ArbitrageData, ArbitrageLinksParams } from '../../../shared/service/arbitrage/interfaces';
 import { service } from '../../../shared/service/service';
 
 const formSchema = z.object({
   tipsport: z.string().min(5),
-  fortuna: z.string().min(5)
+  fortuna: z.string().min(5),
+  desiredBet: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+    message: 'Chyba! Zadali jste špatný formát'
+  }),
 });
 
 interface ArbitrageTennisFinderFormProps {
@@ -33,15 +36,20 @@ export const ArbitrageTennisFinderForm: FC<ArbitrageTennisFinderFormProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       tipsport: 'https://www.tipsport.cz/kurzy/tenis/tenis-muzi-dvouhra/davis-cup-80856',
-      fortuna: 'https://www.ifortuna.cz/sazeni/tenis/m-davis-cup-dvouhra'
+      fortuna: 'https://www.ifortuna.cz/sazeni/tenis/m-davis-cup-dvouhra',
+      desiredBet: '1000',
     }
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     setLoading(true);
+    const payload: ArbitrageLinksParams = {
+      ...values,
+      desiredBet: Number(values.desiredBet)
+    };
     let aData: ArbitrageData;
     service.arbitrage
-      .getTennis(values)
+      .getTennis(payload)
       .then((data) => {
         aData = data;
       })
@@ -53,11 +61,12 @@ export const ArbitrageTennisFinderForm: FC<ArbitrageTennisFinderFormProps> = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+      <section className="flex gap-2">
         <FormField
           control={form.control}
           name="tipsport"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-full">
               <FormLabel>Tipsport tenis</FormLabel>
               <FormControl>
                 <Input placeholder="vypiště url na Tipsport list tennisu..." {...field} />
@@ -70,10 +79,24 @@ export const ArbitrageTennisFinderForm: FC<ArbitrageTennisFinderFormProps> = ({
           control={form.control}
           name="fortuna"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-full">
               <FormLabel>Fortuna tenis</FormLabel>
               <FormControl>
                 <Input placeholder="vypiště url na Fortunu list tennisu..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        </section>
+        <FormField
+          control={form.control}
+          name="desiredBet"
+          render={({ field }) => (
+            <FormItem className='w-[300px]'>
+              <FormLabel>Částka k vsazení</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="začněte psát..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

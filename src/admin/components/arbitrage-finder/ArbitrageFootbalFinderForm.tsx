@@ -14,7 +14,7 @@ import {
   useForm
 } from '../../../shared/components/ui/form';
 import { Input } from '../../../shared/components/ui/input';
-import { ArbitrageData, ArbitrageLinksParams } from '../../../shared/service/arbitrage/interfaces';
+import { ArbitrageData, ArbitrageLinksParams, ArbitrageResult } from '../../../shared/service/arbitrage/interfaces';
 import { service } from '../../../shared/service/service';
 import { selectData } from './select-data';
 import { Switch } from '../../../shared/components/ui/switch';
@@ -22,7 +22,10 @@ import { Label } from '../../../shared/components/ui/label';
 
 const formSchema = z.object({
   tipsport: z.string().min(5),
-  fortuna: z.string().min(5)
+  fortuna: z.string().min(5),
+  desiredBet: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+    message: 'Chyba! Zadali jste špatný formát'
+  }),
 });
 
 interface ArbitrageFootbalFinderFormProps {
@@ -38,12 +41,16 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
     resolver: zodResolver(formSchema),
     defaultValues: {
       tipsport: 'https://www.tipsport.cz/kurzy/fotbal/fotbal-muzi/1-ceska-liga-120',
-      fortuna: 'https://www.ifortuna.cz/sazeni/fotbal/fortuna-liga'
+      fortuna: 'https://www.ifortuna.cz/sazeni/fotbal/fortuna-liga',
+      desiredBet: '1000',
     }
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const payload: ArbitrageLinksParams = values;
+    const payload: ArbitrageLinksParams = {
+      ...values,
+      desiredBet: Number(values.desiredBet)
+    };
     payload.newEvaluation = newEvaluation;
     setLoading(true);
     let aData: ArbitrageData;
@@ -57,15 +64,17 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
 
         setLoading(false);
       });
+      //fetchAllOptions()
   };
 
-  /*   const fetchAllOptions = async () => {
+    const fetchAllOptions = async () => {
     let newData:ArbitrageResult[][] = []
     for(let i =0; i < selectData.length; i++){
       const payload: ArbitrageLinksParams ={
         fortuna: selectData[i].fortunaUrl,
         tipsport: selectData[i].tipsportUrl,
-        newEvaluation
+        newEvaluation,
+        desiredBet: Number(form.getValues("desiredBet"))
       }
       await service.arbitrage
       .getFootbal(payload)
@@ -78,14 +87,15 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
       })
     }
     console.log(newData)
-  }; */
+  };
 
   const onSelectChange = (e: string) => {
     const selectedItem = selectData.filter((item) => item.value === e);
     if (selectedItem.length === 1) {
       const payload: ArbitrageLinksParams = {
         tipsport: selectedItem[0].tipsportUrl,
-        fortuna: selectedItem[0].fortunaUrl
+        fortuna: selectedItem[0].fortunaUrl,
+        desiredBet: Number(form.getValues("desiredBet"))
       };
       form.setValue('tipsport', payload.tipsport!);
       form.setValue('fortuna', payload.fortuna!);
@@ -122,11 +132,26 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
             )}
           />
         </section>
+        
+        <FormField
+          control={form.control}
+          name="desiredBet"
+          render={({ field }) => (
+            <FormItem className='w-[300px]'>
+              <FormLabel>Částka k vsazení</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="začněte psát..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="flex justify-center gap-5 w-full">
           <div className="flex items-center space-x-2">
             <Switch id="mode" checked={newEvaluation} onCheckedChange={setNewEvaluation} />
             <Label htmlFor="mode">Vyhledat jiné kombinace</Label>
           </div>
+
           <SelectInput data={selectData} onChange={onSelectChange} />
 
           <Button type="submit" disabled={loading}>

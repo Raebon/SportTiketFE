@@ -6,6 +6,12 @@ export interface SelectUrlData {
 }
 export const selectData: SelectUrlData[] = [
   {
+    name: 'Liga mistrů',
+    value: '0-liga-mistru',
+    tipsportUrl: 'https://www.tipsport.cz/kurzy/fotbal/fotbal-muzi/liga-mistru-3108',
+    fortunaUrl: 'https://www.ifortuna.cz/sazeni/fotbal/liga-mistru'
+  },
+  {
     name: '1. česká liga',
     value: '0',
     tipsportUrl: 'https://www.tipsport.cz/kurzy/fotbal/fotbal-muzi/1-ceska-liga-120',
