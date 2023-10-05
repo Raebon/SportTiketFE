@@ -8,9 +8,10 @@ import { TipsportLogo } from './logos/TipsportLogo';
 interface ArbitrageRowResultProps {
   data: ArbitrageResult[];
   links: string[];
+  xs?: boolean;
 }
 
-export const ArbitrageRowResult: FC<ArbitrageRowResultProps> = ({ data, links,  }) => {
+export const ArbitrageRowResult: FC<ArbitrageRowResultProps> = ({ data, links, xs }) => {
   const getLink = (site: string): string => {
     const urls = links;
     const keyword = site;
@@ -18,7 +19,7 @@ export const ArbitrageRowResult: FC<ArbitrageRowResultProps> = ({ data, links,  
 
     return matchingUrls[0];
   };
-
+  console.log(data)
   return (
     <div className="grid grid-cols-2 gap-4 mt-2">
       {data.map((item, index) => {
@@ -27,10 +28,22 @@ export const ArbitrageRowResult: FC<ArbitrageRowResultProps> = ({ data, links,  
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  <a href={getLink(item.site)}>
-                    {item.site === 'tipsport' && <TipsportLogo />}
-                    {item.site === 'fortuna' && <FortunaLogo />}
-                  </a>
+                  {!xs ? (
+                    <a href={getLink(item.site)}>
+                      {item.site === 'tipsport' && <TipsportLogo />}
+                      {item.site === 'fortuna' && <FortunaLogo />}
+                    </a>
+                  ) : (
+                    <div className="min-w-[220px]">
+                    <span
+                      className={`font-bold text-2xl ${
+                        item.site === 'fortuna' ? ' text-yellow-300' : ' text-blue-600'
+                      }`}
+                      >
+                      {item.site.toLocaleUpperCase()}
+                    </span>
+                      </div>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -44,7 +57,7 @@ export const ArbitrageRowResult: FC<ArbitrageRowResultProps> = ({ data, links,  
                   <span className="font-semibold">Profit v kč: </span>
                   {formatNumber(item.profit)}
                 </p>
-               {/*  <p className="text-xs text-muted-foreground">
+                {/*  <p className="text-xs text-muted-foreground">
                   <span className="font-semibold">Profit v %: </span>
                   {(item.profit /desiredBet).toFixed(2)}
                 </p> */}

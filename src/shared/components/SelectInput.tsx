@@ -14,7 +14,7 @@ interface SelectInputProps {
 export const SelectInput: FC<SelectInputProps> = ({ data, onChange }) => {
   return (
     <Select onValueChange={onChange} defaultValue={data[0].value}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-[190px]">
         <SelectValue placeholder="Theme" />
       </SelectTrigger>
       <SelectContent className="max-h-[400px] overflow-auto">

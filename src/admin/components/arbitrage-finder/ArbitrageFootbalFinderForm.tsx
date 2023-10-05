@@ -14,18 +14,26 @@ import {
   useForm
 } from '../../../shared/components/ui/form';
 import { Input } from '../../../shared/components/ui/input';
-import { ArbitrageData, ArbitrageLinksParams, ArbitrageResult } from '../../../shared/service/arbitrage/interfaces';
+import { Label } from '../../../shared/components/ui/label';
+import { Switch } from '../../../shared/components/ui/switch';
+import {
+  ArbitrageData,
+  ArbitrageLinksParams,
+  ArbitrageResult
+} from '../../../shared/service/arbitrage/interfaces';
 import { service } from '../../../shared/service/service';
 import { selectData } from './select-data';
-import { Switch } from '../../../shared/components/ui/switch';
-import { Label } from '../../../shared/components/ui/label';
+import { EventLink } from './feature/utils';
+import SearchingArbitrageDialog from './feature/components/SearchingArbitrageDialog';
+import { FootbalLoaderEventManagement } from './feature/FootbalLoaderEventManagement';
+import { getCurrentDateInFormat } from '../../../shared/lib/get-current-date-in-format';
 
 const formSchema = z.object({
   tipsport: z.string().min(5),
   fortuna: z.string().min(5),
   desiredBet: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
     message: 'Chyba! Zadali jste špatný formát'
-  }),
+  })
 });
 
 interface ArbitrageFootbalFinderFormProps {
@@ -37,56 +45,38 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [newEvaluation, setNewEvaluation] = useState<boolean>(false);
+  const [loadingFromLoader, setLoadingFromLoader] = useState<boolean>(false);
+  const [dataFromLoader, setDataFromLoader] = useState<ArbitrageResult[][]>([]);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       tipsport: 'https://www.tipsport.cz/kurzy/fotbal/fotbal-muzi/1-ceska-liga-120',
       fortuna: 'https://www.ifortuna.cz/sazeni/fotbal/fortuna-liga',
-      desiredBet: '1000',
+      desiredBet: '1000'
     }
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const payload: ArbitrageLinksParams = {
-      ...values,
-      desiredBet: Number(values.desiredBet)
-    };
-    payload.newEvaluation = newEvaluation;
+  const fetchData = async (payload: ArbitrageLinksParams) => {
     setLoading(true);
     let aData: ArbitrageData;
-    service.arbitrage
+    await service.arbitrage
       .getFootbal(payload)
       .then((data) => {
         aData = data;
       })
       .finally(() => {
         onSubmitClick(aData);
-
         setLoading(false);
       });
-      //fetchAllOptions()
   };
 
-    const fetchAllOptions = async () => {
-    let newData:ArbitrageResult[][] = []
-    for(let i =0; i < selectData.length; i++){
-      const payload: ArbitrageLinksParams ={
-        fortuna: selectData[i].fortunaUrl,
-        tipsport: selectData[i].tipsportUrl,
-        newEvaluation,
-        desiredBet: Number(form.getValues("desiredBet"))
-      }
-      await service.arbitrage
-      .getFootbal(payload)
-      .then((data) => {
-        if(data && data.data && data.data.result){
-          newData.push(...data.data.result)
-        }
-      }).finally(() => {
-        console.log(newData)
-      })
-    }
-    console.log(newData)
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const payload: ArbitrageLinksParams = {
+      ...values,
+      newEvaluation,
+      desiredBet: Number(values.desiredBet)
+    };
+    fetchData(payload);
   };
 
   const onSelectChange = (e: string) => {
@@ -95,71 +85,115 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
       const payload: ArbitrageLinksParams = {
         tipsport: selectedItem[0].tipsportUrl,
         fortuna: selectedItem[0].fortunaUrl,
-        desiredBet: Number(form.getValues("desiredBet"))
+        desiredBet: Number(form.getValues('desiredBet'))
       };
       form.setValue('tipsport', payload.tipsport!);
       form.setValue('fortuna', payload.fortuna!);
     }
   };
+
+  const startSearchingArbitrageFromLoader = async (e: EventLink[]) => {
+    setLoadingFromLoader(true);
+    setLoading(true);
+    let newData: ArbitrageResult[][] = [];
+    for (let i = 0; i < 1/* e.length */; i++) {
+      let payload: ArbitrageLinksParams = {
+        tipsport: `${e[i].tipsportLink}?timeFilter=form.period.today`, 
+        fortuna: `${e[i].fortunaLink}?date=${getCurrentDateInFormat()}`, 
+        newEvaluation,
+        desiredBet: Number(form.getValues('desiredBet'))
+      };
+      await service.arbitrage
+        .getFootbal(payload)
+        .then((data) => {
+          if (data && data.data && data.data.result) {
+            newData.push(...data.data.result);
+          }
+        })
+        .finally(() => {
+          setDataFromLoader([...dataFromLoader, ...newData]);
+          console.log(newData);
+        });
+    }
+    // setLoadingFromLoader(false);
+    setLoading(false);
+  };
+
+  const closeLoaderDialog = () => {
+    setLoadingFromLoader(false)
+    setDataFromLoader([]);
+  };
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <section className="flex gap-2">
-          <FormField
-            control={form.control}
-            name="tipsport"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Tipsport fotbal</FormLabel>
-                <FormControl>
-                  <Input placeholder="vypiště url na Tipsport list fotbalu..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="fortuna"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Fortuna fotbal</FormLabel>
-                <FormControl>
-                  <Input placeholder="vypiště url na Fortunu list fotbalu..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </section>
-        
-        <FormField
-          control={form.control}
-          name="desiredBet"
-          render={({ field }) => (
-            <FormItem className='w-[300px]'>
-              <FormLabel>Částka k vsazení</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="začněte psát..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex justify-center gap-5 w-full">
-          <div className="flex items-center space-x-2">
-            <Switch id="mode" checked={newEvaluation} onCheckedChange={setNewEvaluation} />
-            <Label htmlFor="mode">Vyhledat jiné kombinace</Label>
+    <>
+      <SearchingArbitrageDialog
+        open={loadingFromLoader}
+        data={dataFromLoader}
+        close={closeLoaderDialog}
+        isFetching={loading}
+      />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <section className="flex gap-2">
+            <FormField
+              control={form.control}
+              name="tipsport"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Tipsport fotbal</FormLabel>
+                  <FormControl>
+                    <Input placeholder="vypiště url na Tipsport list fotbalu..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="fortuna"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Fortuna fotbal</FormLabel>
+                  <FormControl>
+                    <Input placeholder="vypiště url na Fortunu list fotbalu..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </section>
+          <div className="flex justify-end">
+            <FormField
+              control={form.control}
+              name="desiredBet"
+              render={({ field }) => (
+                <FormItem className="w-[300px]">
+                  <FormLabel>Částka k vsazení</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="začněte psát..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-
-          <SelectInput data={selectData} onChange={onSelectChange} />
-
-          <Button type="submit" disabled={loading}>
-            {loading && <Loader2 className="animate-spin mr-2" />}
-            Vyhledat
-          </Button>
-        </div>
-      </form>
-    </Form>
+          <div className="flex justify-between gap-5 w-full">
+            <FootbalLoaderEventManagement
+              onClick={startSearchingArbitrageFromLoader}
+              isLoading={loading}
+            />
+            <div className="flex space-x-5">
+              <div className="flex items-center space-x-2">
+                <Switch id="mode" checked={newEvaluation} onCheckedChange={setNewEvaluation} />
+                <Label htmlFor="mode">Vyhledat jiné kombinace</Label>
+              </div>
+              <SelectInput data={selectData} onChange={onSelectChange} />
+              <Button type="submit" disabled={loading} className="min-w-[88px]">
+                {loading ? <Loader2 className="animate-spin mx-auto" /> : 'Vyhledat'}
+              </Button>
+            </div>
+          </div>
+        </form>
+      </Form>
+    </>
   );
 };

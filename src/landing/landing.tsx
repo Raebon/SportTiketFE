@@ -9,8 +9,6 @@ import { Outlet } from 'react-router-dom';
 
 const Landing = () => {
   /*   useEffect(() => {
- 
-  
     return () => {
       test()
     }
