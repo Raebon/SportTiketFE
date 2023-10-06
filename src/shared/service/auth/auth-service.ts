@@ -9,6 +9,14 @@ export interface AuthResponse {
   token: string;
 }
 export class AuthService {
+  async reload(): Promise<any> {
+    try {
+      const response: AxiosResponse<any> = await api.head(`/auth/reload`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
   async login(body: { userName: string; password: string }): Promise<AuthResponse> {
     try {
       const response: AxiosResponse<any> = await api.post(`/auth/login`, body);

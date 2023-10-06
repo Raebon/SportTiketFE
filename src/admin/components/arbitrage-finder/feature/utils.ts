@@ -4,6 +4,11 @@ export interface EventLink {
   fortunaLink: string;
 }
 
+export interface LoaderEventManagentArgs {
+  items: EventLink[];
+  isTodayChecked: boolean;
+}
+
 export type StorageKey = 'eventLinks' | 'eventLinksFootbal';
 
 export enum LocalStorageEnum {

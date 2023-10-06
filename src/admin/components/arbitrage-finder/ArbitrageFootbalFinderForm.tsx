@@ -14,19 +14,17 @@ import {
   useForm
 } from '../../../shared/components/ui/form';
 import { Input } from '../../../shared/components/ui/input';
-import { Label } from '../../../shared/components/ui/label';
-import { Switch } from '../../../shared/components/ui/switch';
+import { getCurrentDateInFormat } from '../../../shared/lib/get-current-date-in-format';
 import {
   ArbitrageData,
   ArbitrageLinksParams,
   ArbitrageResult
 } from '../../../shared/service/arbitrage/interfaces';
 import { service } from '../../../shared/service/service';
-import { selectData } from './select-data';
-import { EventLink } from './feature/utils';
+import { LoaderEventManagement } from './feature/LoaderEventManagement';
 import SearchingArbitrageDialog from './feature/components/SearchingArbitrageDialog';
-import { FootbalLoaderEventManagement } from './feature/FootbalLoaderEventManagement';
-import { getCurrentDateInFormat } from '../../../shared/lib/get-current-date-in-format';
+import { LoaderEventManagentArgs, LocalStorageEnum } from './feature/utils';
+import { selectData } from './select-data';
 
 const formSchema = z.object({
   tipsport: z.string().min(5),
@@ -44,7 +42,6 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
   onSubmitClick
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [newEvaluation, setNewEvaluation] = useState<boolean>(false);
   const [loadingFromLoader, setLoadingFromLoader] = useState<boolean>(false);
   const [dataFromLoader, setDataFromLoader] = useState<ArbitrageResult[][]>([]);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -73,7 +70,7 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const payload: ArbitrageLinksParams = {
       ...values,
-      newEvaluation,
+      newEvaluation: false,
       desiredBet: Number(values.desiredBet)
     };
     fetchData(payload);
@@ -92,15 +89,21 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
     }
   };
 
-  const startSearchingArbitrageFromLoader = async (e: EventLink[]) => {
+  const startSearchingArbitrageFromLoader = async (e: LoaderEventManagentArgs) => {
+    const items = e.items
+    const tipsportTimeFilterFragment = e.isTodayChecked ? "?timeFilter=form.period.today" : ""
+    const fortunaTimeFilterFragment = e.isTodayChecked ? `?date=${getCurrentDateInFormat()}` : ""
+    let newData: ArbitrageResult[][] = [];
+
+    setDataFromLoader([]);
     setLoadingFromLoader(true);
     setLoading(true);
-    let newData: ArbitrageResult[][] = [];
-    for (let i = 0; i < 1/* e.length */; i++) {
+
+    for (let i = 0; i < 1 /* e.length */; i++) {
       let payload: ArbitrageLinksParams = {
-        tipsport: `${e[i].tipsportLink}?timeFilter=form.period.today`, 
-        fortuna: `${e[i].fortunaLink}?date=${getCurrentDateInFormat()}`, 
-        newEvaluation,
+        tipsport: `${items[i].tipsportLink}${tipsportTimeFilterFragment}`,
+        fortuna: `${items[i].fortunaLink}${fortunaTimeFilterFragment}`,
+        newEvaluation: false,
         desiredBet: Number(form.getValues('desiredBet'))
       };
       await service.arbitrage
@@ -115,12 +118,11 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
           console.log(newData);
         });
     }
-    // setLoadingFromLoader(false);
     setLoading(false);
   };
 
   const closeLoaderDialog = () => {
-    setLoadingFromLoader(false)
+    setLoadingFromLoader(false);
     setDataFromLoader([]);
   };
   return (
@@ -177,15 +179,12 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
             />
           </div>
           <div className="flex justify-between gap-5 w-full">
-            <FootbalLoaderEventManagement
+            <LoaderEventManagement
               onClick={startSearchingArbitrageFromLoader}
               isLoading={loading}
+              localStorageKey={LocalStorageEnum.localStorageKeyFootbal}
             />
             <div className="flex space-x-5">
-              <div className="flex items-center space-x-2">
-                <Switch id="mode" checked={newEvaluation} onCheckedChange={setNewEvaluation} />
-                <Label htmlFor="mode">Vyhledat jiné kombinace</Label>
-              </div>
               <SelectInput data={selectData} onChange={onSelectChange} />
               <Button type="submit" disabled={loading} className="min-w-[88px]">
                 {loading ? <Loader2 className="animate-spin mx-auto" /> : 'Vyhledat'}

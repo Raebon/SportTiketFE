@@ -13,16 +13,16 @@ import {
   useForm
 } from '../../../shared/components/ui/form';
 import { Input } from '../../../shared/components/ui/input';
+import { getCurrentDateInFormat } from '../../../shared/lib/get-current-date-in-format';
 import {
   ArbitrageData,
   ArbitrageLinksParams,
   ArbitrageResult
 } from '../../../shared/service/arbitrage/interfaces';
 import { service } from '../../../shared/service/service';
-import { TennisLoaderEventManagement } from './feature/TennisLoaderEventManagement';
-import { EventLink } from './feature/utils';
+import { LoaderEventManagement } from './feature/LoaderEventManagement';
 import SearchingArbitrageDialog from './feature/components/SearchingArbitrageDialog';
-import { getCurrentDateInFormat } from '../../../shared/lib/get-current-date-in-format';
+import { LoaderEventManagentArgs, LocalStorageEnum } from './feature/utils';
 
 const formSchema = z.object({
   tipsport: z.string().min(5),
@@ -51,6 +51,14 @@ export const ArbitrageTennisFinderForm: FC<ArbitrageTennisFinderFormProps> = ({
     }
   });
 
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const payload: ArbitrageLinksParams = {
+      ...values,
+      desiredBet: Number(values.desiredBet)
+    };
+    fetchData(payload);
+  };
+
   const fetchData = async (payload: ArbitrageLinksParams) => {
     setLoading(true);
     let aData: ArbitrageData;
@@ -65,22 +73,20 @@ export const ArbitrageTennisFinderForm: FC<ArbitrageTennisFinderFormProps> = ({
       });
   };
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const payload: ArbitrageLinksParams = {
-      ...values,
-      desiredBet: Number(values.desiredBet)
-    };
-    fetchData(payload);
-  };
-  const startSearchingArbitrageFromLoader = async (e: EventLink[]) => {
+  const startSearchingArbitrageFromLoader = async (e: LoaderEventManagentArgs) => {
+    const items = e.items
+    const tipsportTimeFilterFragment = e.isTodayChecked ? "?timeFilter=form.period.today" : ""
+    const fortunaTimeFilterFragment = e.isTodayChecked ? `?date=${getCurrentDateInFormat()}` : ""
+    let newData: ArbitrageResult[][] = [];
+
     setDataFromLoader([]);
     setLoadingFromLoader(true);
     setLoading(true);
-    let newData: ArbitrageResult[][] = [];
-    for (let i = 0; i <  e.length; i++) {
+    
+    for (let i = 0; i < items.length; i++) {
       let payload: ArbitrageLinksParams = {
-        tipsport: `${e[i].tipsportLink}?timeFilter=form.period.today`, 
-        fortuna: `${e[i].fortunaLink}?date=${getCurrentDateInFormat()}`,
+        tipsport: `${items[i].tipsportLink}${tipsportTimeFilterFragment}`,
+        fortuna: `${items[i].fortunaLink}${fortunaTimeFilterFragment}`,
         desiredBet: Number(form.getValues('desiredBet'))
       };
       await service.arbitrage
@@ -95,7 +101,6 @@ export const ArbitrageTennisFinderForm: FC<ArbitrageTennisFinderFormProps> = ({
           console.log(newData);
         });
     }
-    // setLoadingFromLoader(false);
     setLoading(false);
   };
 
@@ -155,9 +160,10 @@ export const ArbitrageTennisFinderForm: FC<ArbitrageTennisFinderFormProps> = ({
             />
           </div>
           <div className="flex justify-between gap-5 w-full">
-            <TennisLoaderEventManagement
+            <LoaderEventManagement
               onClick={startSearchingArbitrageFromLoader}
               isLoading={loading}
+              localStorageKey={LocalStorageEnum.localStorageKey}
             />
             <Button type="submit" disabled={loading} className="min-w-[88px]">
               {loading ? <Loader2 className="animate-spin mx-auto" /> : 'Vyhledat'}

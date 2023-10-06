@@ -19,7 +19,7 @@ export const ArbitrageRowResult: FC<ArbitrageRowResultProps> = ({ data, links, x
 
     return matchingUrls[0];
   };
-  console.log(data)
+  console.log(data);
   return (
     <div className="grid grid-cols-2 gap-4 mt-2">
       {data.map((item, index) => {
@@ -35,14 +35,14 @@ export const ArbitrageRowResult: FC<ArbitrageRowResultProps> = ({ data, links, x
                     </a>
                   ) : (
                     <div className="min-w-[220px]">
-                    <span
-                      className={`font-bold text-2xl ${
-                        item.site === 'fortuna' ? ' text-yellow-300' : ' text-blue-600'
-                      }`}
+                      <span
+                        className={`font-bold text-2xl ${
+                          item.site === 'fortuna' ? ' text-yellow-300' : ' text-blue-600'
+                        }`}
                       >
-                      {item.site.toLocaleUpperCase()}
-                    </span>
-                      </div>
+                        {item.site.toLocaleUpperCase()}
+                      </span>
+                    </div>
                   )}
                 </CardTitle>
               </CardHeader>
@@ -57,10 +57,6 @@ export const ArbitrageRowResult: FC<ArbitrageRowResultProps> = ({ data, links, x
                   <span className="font-semibold">Profit v kč: </span>
                   {formatNumber(item.profit)}
                 </p>
-                {/*  <p className="text-xs text-muted-foreground">
-                  <span className="font-semibold">Profit v %: </span>
-                  {(item.profit /desiredBet).toFixed(2)}
-                </p> */}
                 <p className="text-xs text-muted-foreground">
                   <span className="font-semibold">Kurz: </span>
                   {item.rate}
