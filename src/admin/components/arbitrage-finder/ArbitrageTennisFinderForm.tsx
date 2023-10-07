@@ -74,15 +74,15 @@ export const ArbitrageTennisFinderForm: FC<ArbitrageTennisFinderFormProps> = ({
   };
 
   const startSearchingArbitrageFromLoader = async (e: LoaderEventManagentArgs) => {
-    const items = e.items
-    const tipsportTimeFilterFragment = e.isTodayChecked ? "?timeFilter=form.period.today" : ""
-    const fortunaTimeFilterFragment = e.isTodayChecked ? `?date=${getCurrentDateInFormat()}` : ""
+    const items = e.items;
+    const tipsportTimeFilterFragment = e.isTodayChecked ? '?timeFilter=form.period.today' : '';
+    const fortunaTimeFilterFragment = e.isTodayChecked ? `?date=${getCurrentDateInFormat()}` : '';
     let newData: ArbitrageResult[][] = [];
 
     setDataFromLoader([]);
     setLoadingFromLoader(true);
     setLoading(true);
-    
+
     for (let i = 0; i < items.length; i++) {
       let payload: ArbitrageLinksParams = {
         tipsport: `${items[i].tipsportLink}${tipsportTimeFilterFragment}`,

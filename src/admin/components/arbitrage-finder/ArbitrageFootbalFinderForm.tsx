@@ -90,9 +90,9 @@ export const ArbitrageFootbalFinderForm: FC<ArbitrageFootbalFinderFormProps> = (
   };
 
   const startSearchingArbitrageFromLoader = async (e: LoaderEventManagentArgs) => {
-    const items = e.items
-    const tipsportTimeFilterFragment = e.isTodayChecked ? "?timeFilter=form.period.today" : ""
-    const fortunaTimeFilterFragment = e.isTodayChecked ? `?date=${getCurrentDateInFormat()}` : ""
+    const items = e.items;
+    const tipsportTimeFilterFragment = e.isTodayChecked ? '?timeFilter=form.period.today' : '';
+    const fortunaTimeFilterFragment = e.isTodayChecked ? `?date=${getCurrentDateInFormat()}` : '';
     let newData: ArbitrageResult[][] = [];
 
     setDataFromLoader([]);

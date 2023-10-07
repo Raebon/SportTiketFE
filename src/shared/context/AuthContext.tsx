@@ -2,17 +2,28 @@ import { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { service } from '../service/service';
 import { toast } from '../components/ui/use-toast';
+import jwt_decode from 'jwt-decode';
 
-export type AuthContextType = {
+interface Auth {
   accessToken: string | null;
+  role: 'admin' | 'user' | null;
   loginLoading: boolean;
   loginError: boolean;
   lastLoginDate: Date | null;
   isUserLogged: boolean;
-  setAccessToken: (e: any) => void;
+}
+
+export type AuthContextType = {
+  accessToken: string | null;
+  role: 'admin' | 'user' | null;
+  loginLoading: boolean;
+  loginError: boolean;
+  lastLoginDate: Date | null;
+  isUserLogged: boolean;
   login: (e: any) => void;
   logout: () => void;
 };
+
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export default AuthContext;
@@ -22,68 +33,72 @@ interface Props {
 }
 
 export const AuthProvider: React.FC<Props> = ({ children }) => {
-  const [accessToken, setAccessToken] = useState<string | null>(
-    service.token.getLocalAccessToken()
-  );
-  const [loginLoading, setLoginLoading] = useState<boolean>(false);
-  const [loginError, setLoginError] = useState<boolean>(false);
-  const [lastLoginDate, setLastLoginDate] = useState<Date | null>(null);
-  const [isUserLogged, setIsUserLogged] = useState<boolean>(service.auth.isLogged());
-  const [loading, setLoading] = useState(true);
+  const [authState, setAuthState] = useState<Auth>({
+    accessToken: service.token.getLocalAccessToken(),
+    role: _getRoleFromToken(service.token.getLocalAccessToken()),
+    loginLoading: false,
+    loginError: false,
+    lastLoginDate: service.token.getFirstLoginModalSeenToken(),
+    isUserLogged: service.auth.isLogged()
+  });
 
   const history = useNavigate();
 
   const login = async (e: { userName: string; password: string }) => {
-    setLoginLoading(true);
-    service.auth
-      .login(e)
-      .then((res) => {
-        history(window.location.pathname);
-        setLoading(false);
-        setAccessToken(res.token);
-        service.token.setAccessToken(String(res.token));
-        service.token.setInfoToken(res);
-        setIsUserLogged(true);
-        setLastLoginDate(null);
-        setLoginLoading(false);
-        setLoginError(false);
-      })
-      .catch((err) => {
-        setLoginLoading(false);
-        setLoginError(true);
-        setIsUserLogged(false);
-        setLastLoginDate(null);
-        toast({
-          title: err.response.data.message,
-          variant: 'destructive'
-        });
+    try {
+      setAuthState((prevState) => ({ ...prevState, loginLoading: true }));
+      const res = await service.auth.login(e);
+      history(window.location.pathname);
+      setAuthState({
+        accessToken: res.token,
+        role: _getRoleFromToken(String(res.token)),
+        loginLoading: false,
+        loginError: false,
+        lastLoginDate: null,
+        isUserLogged: true
       });
+      service.token.setAccessToken(String(res.token));
+      service.token.setInfoToken(res);
+    } catch (err: any) {
+      setAuthState({
+        ...authState,
+        loginLoading: false,
+        loginError: true
+      });
+      toast({
+        title: err.response.data.message,
+        variant: 'destructive'
+      });
+    }
   };
 
-  let logout = () => {
-    setAccessToken(null);
-    setLoading(false);
-    setIsUserLogged(false);
+  const logout = () => {
+    setAuthState({
+      accessToken: null,
+      role: null,
+      loginLoading: false,
+      loginError: false,
+      lastLoginDate: null,
+      isUserLogged: false
+    });
     service.auth.logout();
     history('/');
   };
 
-  let contextData = {
-    accessToken: accessToken,
-    loginLoading: loginLoading,
-    loginError: loginError,
-    lastLoginDate: lastLoginDate,
-    isUserLogged: isUserLogged,
-    setAccessToken: setAccessToken,
-    login: login,
-    logout: logout
-  };
-
   useEffect(() => {
-    setLoading(false);
-  }, [accessToken, loading]);
+    setAuthState({
+      ...authState,
+      loginLoading: false
+    });
+  }, [authState.accessToken, authState.loginLoading]);
 
   return (
-    <AuthContext.Provider value={contextData}>{loading ? null : children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ ...authState, login, logout }}>{children}</AuthContext.Provider>
   );
+};
+
+const _getRoleFromToken = (token: string | null) => {
+  if(!token) return null
+  const decoded = jwt_decode(token);
+  return (decoded as any).role;
 };

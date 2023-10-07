@@ -9,7 +9,7 @@ import { Label } from '../../../../shared/components/ui/label';
 interface LoaderEventManagementProps {
   onClick(e: LoaderEventManagentArgs): void;
   isLoading: boolean;
-  localStorageKey:LocalStorageEnum
+  localStorageKey: LocalStorageEnum;
 }
 
 export const LoaderEventManagement: FC<LoaderEventManagementProps> = ({
