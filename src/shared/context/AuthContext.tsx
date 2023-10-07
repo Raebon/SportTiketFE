@@ -98,7 +98,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
 };
 
 const _getRoleFromToken = (token: string | null) => {
-  if(!token) return null
+  if (!token) return null;
   const decoded = jwt_decode(token);
   return (decoded as any).role;
 };

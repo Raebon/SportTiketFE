@@ -30,31 +30,31 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({}) => {
 
   const menuItems: MenuItems[] = [
     {
-      name:"Profil",
+      name: 'Profil',
       onClick: redirectToProfile,
       visibility: true
     },
     {
-      name:"Admin panel",
+      name: 'Admin panel',
       onClick: redirectToAdminPanel,
-      visibility: role === "admin"
+      visibility: role === 'admin'
     },
     {
-      name:"Historie transakcí",
+      name: 'Historie transakcí',
       onClick: redirectToBalanceHistory,
       visibility: true
     },
     {
-      name:"Nastavení",
+      name: 'Nastavení',
       onClick: redirectToSettings,
       visibility: true
     },
     {
-      name:"Odhlásit",
+      name: 'Odhlásit',
       onClick: logout,
       visibility: true
-    },
-  ]
+    }
+  ];
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger className="p-2 hover:scale-105">
@@ -66,18 +66,18 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({}) => {
       <DropdownMenuContent className="min-w-[200px]">
         <DropdownMenuLabel>
           {data?.data.userName}
-          <span className='text-gray-400 text-xs font-normal'> - {role}</span>
-          </DropdownMenuLabel>
+          <span className="text-gray-400 text-xs font-normal"> - {role}</span>
+        </DropdownMenuLabel>
         <WalletInfo closeDropdownMenu={closeDropdownMenu} />
         <DropdownMenuSeparator />
         {menuItems.map((item, index) => {
           return (
             <React.Fragment key={index}>
-            {item.visibility && (
-              <DropdownMenuItem onClick={item.onClick}>{item.name}</DropdownMenuItem>
-            )}
+              {item.visibility && (
+                <DropdownMenuItem onClick={item.onClick}>{item.name}</DropdownMenuItem>
+              )}
             </React.Fragment>
-          )
+          );
         })}
       </DropdownMenuContent>
     </DropdownMenu>
@@ -85,7 +85,7 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({}) => {
 };
 
 interface MenuItems {
-  name:string,
-  onClick:() => void,
-  visibility: boolean
+  name: string;
+  onClick: () => void;
+  visibility: boolean;
 }
