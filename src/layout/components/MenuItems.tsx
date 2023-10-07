@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../../shared/components/ui/button';
 import AuthContext, { AuthContextType } from '../../shared/context/AuthContext';
 import { IMenuItems } from '../../shared/interfaces';
-
+import logo from "../assets/logo.webp"
 interface Props {
   menuItems: Array<IMenuItems>;
   privateMenuItems: Array<IMenuItems>;
@@ -20,7 +20,7 @@ const MenuItems: FC<Props> = ({ menuItems, privateMenuItems }) => {
       <div className="flex flex-shrink-0 items-center">
         <img
           className="h-8 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+          src={logo}
           alt="Your Company"
         />
       </div>
