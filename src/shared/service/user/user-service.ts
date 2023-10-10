@@ -3,6 +3,14 @@ import api from '../../lib/api-interceptors';
 import { IBalanceUpdateRequest, IUser, IWallet } from './interface';
 
 export class UserService {
+  public async getUsers() {
+    try {
+      const response: AxiosResponse<IUser[]> = await api.get(`/user/list`, {});
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
   public async getCurrentUserDetail() {
     try {
       const response: AxiosResponse<IUser> = await api.get(`/user/current-user-detail`, {});
